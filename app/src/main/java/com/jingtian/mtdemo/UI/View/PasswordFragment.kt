@@ -2,7 +2,6 @@ package com.jingtian.mtdemo.UI.View
 
 import android.os.Bundle
 import android.view.View
-import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.jingtian.mtdemo.Base.View.BaseFragment
@@ -23,15 +22,18 @@ class PasswordFragment:BaseFragment<LoginPresenter>(), LoginInterface.view {
         val tv_fgpwd_loginhint = activity!!.findViewById<TextView>(R.id.tv_fgpwd_loginhint)
         val ll_pwd = activity!!.findViewById<LinearLayout>(R.id.ll_pwd)
         val fgpwd_divider2 = activity!!.findViewById<View>(R.id.fgpwd_divider2)
+        is_password = true
         tv_fgpwd_change.setOnClickListener {
             if (is_password) {
                 ll_pwd.visibility = View.GONE
                 tv_fgpwd_loginhint.visibility = View.VISIBLE
                 fgpwd_divider2.visibility = View.GONE
+                tv_fgpwd_change.setText("使用密码")
             } else {
                 ll_pwd.visibility = View.VISIBLE
                 tv_fgpwd_loginhint.visibility = View.GONE
                 fgpwd_divider2.visibility = View.VISIBLE
+                tv_fgpwd_change.setText("使用验证码")
             }
             is_password = !is_password
         }
