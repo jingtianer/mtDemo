@@ -28,6 +28,10 @@ class LoginActivity:BaseActivity<BaseInterface.presenter>(), BaseInterface.view 
         supportFragmentManager.beginTransaction()
             .replace(R.id.login_frame, PasswordFragment())
             .commit()
+        val login_left_exit = findViewById<TextView>(R.id.login_left_exit)
+        login_left_exit.setOnClickListener {
+            this.finish()
+        }
 
 
     }

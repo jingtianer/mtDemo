@@ -46,7 +46,7 @@ class SplashActivity:BaseActivity<BaseInterface.presenter>(){
         Log.d("start main activity","start main activity")
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
-
+        this.finish()
     }
     val timer = Timer()
     override fun onCreate(savedInstanceState: Bundle?) {
