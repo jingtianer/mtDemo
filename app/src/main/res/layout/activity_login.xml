@@ -18,8 +18,8 @@
             android:layout_height="48dp"
             android:textColor="@color/orange"
             android:layout_gravity="left"
+            android:textSize="22dp"
             android:gravity="center"
-            android:background="@mipmap/close"
             android:text="" />
 
         <TextView

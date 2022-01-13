@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">mtDemo</string>
+    <string name="back">&#xe625;</string>
+    <string name="close">&#xe626;</string>
+    <string name="like">&#xe62e;</string>
+    <string name="mine">&#xe634;</string>
+    <string name="home">&#xe635;</string>
+    <string name="sort">&#xe636;</string>
+    <string name="checked">&#xe641;</string>
+    <string name="unchecked">&#xe642;</string>
+    <string name="cart">&#xe70b;</string>
+    <string name="show_pd">&#xe63a;</string>
 </resources>

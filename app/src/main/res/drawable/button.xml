@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_enabled="false" android:drawable="@drawable/button_disable">
+    <item android:state_enabled="false">
         <shape>
             <corners android:radius="10dp" />
             <color android:color="@color/gray" />
@@ -11,13 +11,11 @@
             <corners android:radius="10dp" />
             <gradient android:startColor="@color/orange_secondary" android:endColor="@color/orange_secondary1"/>
         </shape>
-
     </item>
     <item>
         <shape>
             <corners android:radius="10dp" />
             <gradient android:startColor="@color/orange" android:endColor="@color/orange1"/>
         </shape>
-
     </item>
 </selector>

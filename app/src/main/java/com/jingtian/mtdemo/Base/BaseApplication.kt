@@ -1,6 +1,8 @@
 package com.jingtian.mtdemo.Base
 
 import android.app.Application
+import com.jingtian.mtdemo.Net.NetInterface
+import com.jingtian.mtdemo.Utils.AnimationUtil
 import com.jingtian.mtdemo.Utils.SP
 import kotlin.properties.Delegates
 
@@ -8,9 +10,12 @@ class BaseApplication: Application() {
     override fun onCreate() {
         super.onCreate()
         sp = SP(this)
+        anims = AnimationUtil(this)
+
     }
 
     companion object {
         var sp by Delegates.notNull<SP>()
+        var anims by Delegates.notNull<AnimationUtil>()
     }
 }
