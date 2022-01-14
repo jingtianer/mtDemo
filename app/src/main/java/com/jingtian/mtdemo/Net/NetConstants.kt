@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit
 
 class NetConstants {
     companion object {
-        val baseUrl = "http://172.16.28.25:9555/v1/takeout/"
+        val baseUrl = "http://49.232.223.216:8088/mt_server/"
         val client = OkHttpClient.Builder()
             .addInterceptor(HttpLoggingInterceptor())
             .connectTimeout(30, TimeUnit.SECONDS)

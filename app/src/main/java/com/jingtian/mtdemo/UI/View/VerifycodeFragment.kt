@@ -141,6 +141,7 @@ class VerifycodeFragment(val passwordFragment: PasswordFragment):BaseFragment<Lo
 
     override fun login_success() {
         Toast.makeText(activity!!, "登录成功", Toast.LENGTH_SHORT).show()
+        BaseApplication.sp.login = true
     }
 
     override fun loginByVc_fail(mes: String) {

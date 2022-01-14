@@ -8,6 +8,15 @@
     <string name="sort">&#xe636;</string>
     <string name="checked">&#xe641;</string>
     <string name="unchecked">&#xe642;</string>
-    <string name="cart">&#xe70b;</string>
     <string name="show_pd">&#xe63a;</string>
+    <string name="search">&#xe600;</string>
+
+    <string name="daily">&#xe64b;</string>
+    <string name="ticket">&#xe64d;</string>
+    <string name="show">&#xe643;</string>
+    <string name="star">&#xe644;</string>
+    <string name="edit">&#xe64f;</string>
+    <string name="scan">&#xe633;</string>
+    <string name="cart">&#xe70b;</string>
+    <string name="position">&#xe65b;</string>
 </resources>

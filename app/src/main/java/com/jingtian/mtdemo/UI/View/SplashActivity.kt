@@ -9,6 +9,9 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
+import android.view.View
+import android.view.WindowManager
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -29,12 +32,12 @@ class SplashActivity:BaseActivity<BaseInterface.presenter>(){
     var splash_delay= 4
     fun hideSystemBars() {
         //已经废弃
-        //window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
-        //window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
+        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
+        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         WindowInsetsControllerCompat(window, window.decorView).let {
             it.hide(WindowInsetsCompat.Type.systemBars())
-            //it.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_BARS_BY_TOUCH
+            it.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_BARS_BY_TOUCH
         }
     }
     fun showSystemBars() {
@@ -78,7 +81,7 @@ class SplashActivity:BaseActivity<BaseInterface.presenter>(){
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        hideSystemBars()
+        //hideSystemBars()
         setBackGround()
         //倒计时
         findViewById<TextView>(R.id.tv_sp_skip).setOnClickListener {
@@ -86,7 +89,7 @@ class SplashActivity:BaseActivity<BaseInterface.presenter>(){
             timer?.cancel()
         }
         //点击跳过按钮
-
+        noBars()
     }
 
 

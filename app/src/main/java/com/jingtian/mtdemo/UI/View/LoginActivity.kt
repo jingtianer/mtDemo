@@ -22,9 +22,6 @@ class LoginActivity:BaseActivity<BaseInterface.presenter>(), BaseInterface.view 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        window.statusBarColor = Color.TRANSPARENT
-        window.navigationBarColor = Color.TRANSPARENT
-        //没用
         val text = findViewById<TextView>(R.id.login_left_exit)
         SetFont.setFont(text, this)
         text.setText(R.string.close)
@@ -35,7 +32,6 @@ class LoginActivity:BaseActivity<BaseInterface.presenter>(), BaseInterface.view 
         login_left_exit.setOnClickListener {
             this.finish()
         }
-
-
+        noBars()
     }
 }

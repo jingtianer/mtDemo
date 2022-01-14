@@ -12,7 +12,16 @@ abstract class BaseFragment<T:BaseInterface.presenter>:BaseInterface.view, Fragm
     override fun bind() {
         mPresenter?.bind(this)
     }
-
+    fun getStatusBarHeight():Int {
+        var statusBarHeight = -1;
+        //获取status_bar_height资源的ID
+        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            //根据资源ID获取响应的尺寸值
+            statusBarHeight = resources.getDimensionPixelSize(resourceId);
+        }
+        return statusBarHeight
+    }
     abstract fun getPresenter():T
     abstract fun getLayout():Int
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/menu_main_btmnavi_home" android:title="{fa-home}"/>
-    <item android:id="@+id/menu_main_btmnavi_sort" android:title="{fa-sort}"/>
-    <item android:id="@+id/menu_main_btmnavi_cart" android:title="{fa-shopping-cart}"/>
-    <item android:id="@+id/menu_main_btmnavi_mine" android:title="{fa-user}"/>
+    <item android:id="@+id/menu_main_btmnavi_home" android:title="@string/home"/>
+    <item android:id="@+id/menu_main_btmnavi_sort" android:title="@string/sort"/>
+    <item android:id="@+id/menu_main_btmnavi_cart" android:title="@string/cart"/>
+    <item android:id="@+id/menu_main_btmnavi_mine" android:title="@string/mine"/>
 </menu>
