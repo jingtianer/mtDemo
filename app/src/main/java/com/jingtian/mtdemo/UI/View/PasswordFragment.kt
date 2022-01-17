@@ -1,5 +1,6 @@
 package com.jingtian.mtdemo.UI.View
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputType

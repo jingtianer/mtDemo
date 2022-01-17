@@ -19,6 +19,7 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.jingtian.mtdemo.Base.BaseApplication
 import com.jingtian.mtdemo.Base.Interface.BaseInterface
 import com.jingtian.mtdemo.Base.Presenter.BasePresenter
 import com.jingtian.mtdemo.Base.View.BaseFragment
@@ -32,6 +33,8 @@ class MineFragment: BaseFragment<BaseInterface.presenter>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val tv_mine_id  = activity!!.findViewById<TextView>(R.id.tv_mine_id)
+        tv_mine_id.text = BaseApplication.sp.phone
         val tv_mine_settings = activity!!.findViewById<TextView>(R.id.tv_mine_settings)
         val tv_mine_notification = activity!!.findViewById<TextView>(R.id.tv_mine_notification)
         SetFont.setFont(tv_mine_settings,activity!!)

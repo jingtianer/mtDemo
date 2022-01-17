@@ -15,7 +15,7 @@ interface NetInterface {
     * verificationCode	String	是	登录验证码
     * 备注：模拟项目暂时先写死判断规则，密码为1234，就代表密码正确，其他认为是验证码错误。
     * */
-    @GET("account/LoginByVc")
+    @GET("LoginByVc")
     fun loginByVc(@Query("phoneNumber")phoneNumber:String,
                   @Query("verificationCode")verificationCode:String): Call<BaseResult<Any>>?
 
@@ -26,7 +26,7 @@ interface NetInterface {
     * password	String	是	登录密码，理论上应该加密传输，因为模拟项目，所以暂时明文传输。
     * 备注：模拟项目暂时先写死判断规则，密码为1234，就代表密码正确，其他认为是验证码错误。
     * */
-    @GET("account/LoginByPd")
+    @GET("LoginByPd")
     fun loginByPd(@Query("phoneNumber")phoneNumber:String,
                   @Query("password")password:String): Call<BaseResult<Any>>?
 }

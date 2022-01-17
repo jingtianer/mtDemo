@@ -31,9 +31,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 import android.view.WindowManager
-
-
-
+import com.jingtian.mtdemo.Base.BaseApplication
 
 
 class MainActivity: BaseActivity<MainInterface.presenter>(), MainInterface.view {
@@ -70,8 +68,10 @@ class MainActivity: BaseActivity<MainInterface.presenter>(), MainInterface.view 
         return fragments[i]!!
     }
     fun Login() {
-        val intent = Intent(this, LoginActivity::class.java)
-        startActivity(intent)
+        if(!BaseApplication.sp.login) {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+        }
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

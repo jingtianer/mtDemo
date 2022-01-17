@@ -46,7 +46,7 @@ class LoginPresenter: BasePresenter<LoginInterface.view>(), LoginInterface.prese
             }
 
             override fun onFailure(call: Call<BaseResult<Any>>, t: Throwable) {
-                mView?.loginByPd_fail("网络错误")
+                mView?.loginByPd_fail("其他错误")
             }
 
         })
