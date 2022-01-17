@@ -19,4 +19,26 @@
     <string name="scan">&#xe633;</string>
     <string name="cart">&#xe70b;</string>
     <string name="position">&#xe65b;</string>
+
+
+    <!--图标 ”我的“界面-->
+    <!--标题-->
+    <string name="settings">&#xe8b7;</string>
+    <string name="notification">&#xe716;</string>
+    <!--上部-->
+    <string name="red_bao">&#xe6da;</string>
+    <string name="coupon">&#xe899;</string>
+    <string name="allowance">&#xe602;</string>
+    <!--底部-->
+    <string name="my_local">&#xe65b;</string>
+    <string name="foot_print">&#xe671;</string>
+    <string name="my_likes">&#xe8c6;</string>
+    <string name="acknowledge_log">&#xe61e;</string>
+    <string name="comments">&#xe60c;</string>
+    <string name="my_assistant">&#xe740;</string>
+    <string name="commercial">&#xe601;</string>
+    <string name="more">&#xe73a;</string>
+
+
+
 </resources>
