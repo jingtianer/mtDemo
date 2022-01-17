@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.*
 import android.widget.FrameLayout
 import android.widget.TextView
@@ -90,15 +91,6 @@ class MainActivity: BaseActivity<MainInterface.presenter>(), MainInterface.view 
                 }
             }
         })
-        val srl_refresh_main = findViewById<SwipeRefreshLayout>(R.id.srl_refresh_main)
-        srl_refresh_main.setOnRefreshListener {
-            Timer().schedule(object :TimerTask() {
-                override fun run() {
-                    srl_refresh_main.isRefreshing = false
-                }
-            }, 2000)
-        }
-
     }
     data class navi_bean(val icon:Int, val title:String, val class_name:String) {
         var mHolder:navi_adapter.view_holder?=null

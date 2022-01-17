@@ -71,11 +71,11 @@ class VerifycodeFragment(val passwordFragment: PasswordFragment):BaseFragment<Lo
             }
         }
         override fun afterTextChanged(p0: Editable?) {}
-        fun update() {
-
+        private fun update() {
             var i = 0
             while (i < cur.length) {
-                list[i].setText("${cur[i]}")
+                list[i].text = "${cur[i]}"
+                //用settext会导致原生os不能正常显示
                 i++
             }
         }
@@ -85,10 +85,12 @@ class VerifycodeFragment(val passwordFragment: PasswordFragment):BaseFragment<Lo
         override fun onKey(p0: View?, p1: Int, p2: KeyEvent?): Boolean {
             if ((p1 == KeyEvent.KEYCODE_DEL) && (p2!!.action == KeyEvent.ACTION_DOWN)) {
                 val i = cur.length - 1
-                list[i].text = ""
-                cur = cur.substring(0, cur.length-1)
+                if (i >= 0) {
+                    list[i].text = ""
+                    cur = cur.substring(0, i)
+                }
             }
-            return true
+            return false
         }
 
     }

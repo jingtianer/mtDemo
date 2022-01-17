@@ -1,5 +1,6 @@
 package com.jingtian.mtdemo.UI.View
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -15,6 +16,7 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.core.graphics.drawable.toDrawable
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.jingtian.mtdemo.Base.Interface.BaseInterface
 import com.jingtian.mtdemo.Base.Presenter.BasePresenter
 import com.jingtian.mtdemo.Base.View.BaseActivity
@@ -22,6 +24,8 @@ import com.jingtian.mtdemo.Base.View.BaseFragment
 import com.jingtian.mtdemo.R
 import com.jingtian.mtdemo.Utils.SetFont
 import com.jingtian.mtdemo.Utils.SetFont.Companion.getScreenWidth
+import kotlin.math.abs
+import kotlin.random.Random
 
 class HomeFragment: BaseFragment<BaseInterface.presenter>() {
     override fun getPresenter(): BaseInterface.presenter {
@@ -106,17 +110,77 @@ class HomeFragment: BaseFragment<BaseInterface.presenter>() {
             R.drawable.main_vf_3,
             R.drawable.main_vf_4,
             R.drawable.main_vf_5)
+        val commodityRes = arrayListOf(
+            R.drawable.commodities1,
+            R.drawable.commodities2,
+            R.drawable.commodities3,
+            R.drawable.commodities4,
+            R.drawable.commodities5,
+            R.drawable.commodities6,
+            R.drawable.commodities7,
+            R.drawable.commodities8,
+            R.drawable.commodities9,
+            R.drawable.commodities10,
+            R.drawable.commodities11,
+            R.drawable.commodities12,
+            R.drawable.commodities13,
+            R.drawable.commodities14,
+            R.drawable.commodities15,
+            R.drawable.commodities16,
+            R.drawable.commodities17,
+        )
         for (img in img_res) {
             vf_main.addView(ImageView(context).apply {
                 val bitmap = BitmapFactory.decodeResource(resources, img)
-                val distW = SetFont.getScreenWidth(activity!!)*0.9
+                val distW = SetFont.getScreenWidth(activity!!)*0.95
                 val distH = bitmap.height * (1.0*distW/bitmap.width)
                 background = Bitmap.createScaledBitmap(bitmap, distW.toInt(), distH.toInt(),false).toDrawable(resources)
             })
         }
+        vf_main.startFlipping()
         callback = (activity!! as MainActivity).getCallback()
         val gestureDetector = GestureDetector(context, PF_TouchListenr(vf_main, context))
         callback?.register_listener(gestureDetector)
+        val rv_commodity = activity!!.findViewById<RecyclerView>(R.id.rv_commodity)
+        rv_commodity.apply {
+            layoutManager = StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL).apply {
+
+            }
+            adapter = RvCommodityAdapter(activity!!, commodityRes)
+        }
+    }
+    class RvCommodityAdapter(val activity: Activity, val commodityRes:ArrayList<Int>): RecyclerView.Adapter<RvCommodityAdapter.ViewHolder>() {
+        class ViewHolder(val view: View): RecyclerView.ViewHolder(view) {
+            val iv_commodity:ImageView
+            val tv_item_commodity:TextView
+            val tv_item_commodity_price:TextView
+            init {
+                iv_commodity = view.findViewById(R.id.iv_commodity)
+                tv_item_commodity = view.findViewById(R.id.tv_item_commodity)
+                tv_item_commodity_price=view.findViewById(R.id.tv_item_commodity_price)
+            }
+
+        }
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+            return ViewHolder(LayoutInflater.from(activity).inflate(R.layout.item_commodity,parent,false).apply {
+            })
+        }
+        val random = Random(System.currentTimeMillis())
+        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+            val n = 1 + abs(random.nextInt() % 10)
+            var discription = ""
+            for (i in 0..n) {
+                discription += "描述！"
+            }
+            holder.apply {
+                iv_commodity.setImageResource(commodityRes[position])
+                tv_item_commodity.text = "商品${position}" + discription
+                tv_item_commodity_price.text = "＄${100+abs(random.nextInt() % 1000)}"
+            }
+        }
+
+        override fun getItemCount(): Int = commodityRes.size
     }
     override fun onDestroy() {
         super.onDestroy()
