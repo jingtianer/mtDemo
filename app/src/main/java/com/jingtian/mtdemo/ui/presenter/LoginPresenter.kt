@@ -41,6 +41,7 @@ class LoginPresenter: BasePresenter<LoginInterface.View>(), LoginInterface.Prese
                 response: Response<BaseResult<Any>>
             ) {
                 when (response.body()?.code) {
+                    // TODO: 返回code这类特殊数字，也要用名字清晰的常量字段维护起来
                     0 -> {
                         mView?.loginSuccess()
                     }

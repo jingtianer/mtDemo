@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:background="@color/bg_gray"
     android:layout_height="match_parent">
+    <!--todo: XML格式化-->
 <LinearLayout
     android:id="@+id/ll_mine_root"
     android:layout_width="match_parent"

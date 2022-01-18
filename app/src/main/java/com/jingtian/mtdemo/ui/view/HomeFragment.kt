@@ -96,6 +96,7 @@ class HomeFragment: BaseFragment<BaseInterface.Presenter>() {
         super.onStart()
         activity?.let {
             val vfMain = it.findViewById<ViewFlipper>(R.id.vf_main)
+            // TODO: 图片都放drawable下了，drawable/drawable-xxhdpi等目录什么区别?
             val imgRes = arrayListOf(
                 R.drawable.main_vf_1,
                 R.drawable.main_vf_2,
@@ -121,6 +122,7 @@ class HomeFragment: BaseFragment<BaseInterface.Presenter>() {
                 R.drawable.commodities16,
                 R.drawable.commodities17,
             )
+            // TODO: 在onStart这个方法里进行View的初始化，是否会多次执行导致数据冗余等问题？
             for (img in imgRes) {
                 vfMain.addView(ImageView(context).apply {
                     val bitmap = BitmapFactory.decodeResource(resources, img)

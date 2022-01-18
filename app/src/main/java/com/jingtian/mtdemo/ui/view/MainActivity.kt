@@ -87,9 +87,10 @@ class MainActivity: BaseActivity<MainInterface.Presenter>(), MainInterface.View 
         rcBtmNavi.adapter = NaviAdapter(naviArr, this, object :NaviItemClick {
             override fun click(position: Int) {
                 supportFragmentManager.beginTransaction()
+                    // TODO: 为什么不用ViewPager2？这种方式，Fragment每次切换过去会重新加载View，性能差，体验差
                 .replace(R.id.fl_main, getInstance(position))
                 .commit()
-                if (position == 3) {
+                if (position == 3) {// TODO: 特殊数字要用名字清晰的常量维护起来
                     login()
                 }
             }

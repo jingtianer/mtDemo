@@ -136,6 +136,7 @@ class PasswordFragment:BaseFragment<LoginPresenter>(), LoginInterface.View {
                     Toast.makeText(context, "请输入正确的手机号", Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
+                // TODO: 还没登录成功，怎么就开始记录输入的信息了？
                 BaseApplication.sp.phone = etPhone.text.toString()
                 if (isPassword && etPwd.text.toString().isBlank()) {
                     flPwd.startAnimation(shake)

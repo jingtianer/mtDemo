@@ -50,6 +50,7 @@ class MineFragment: BaseFragment<BaseInterface.Presenter>() {
                 layoutManager = GridLayoutManager(it, 1).apply {
                     orientation = GridLayoutManager.HORIZONTAL
                 }
+                // TODO: 不依赖onViewCreated方法的逻辑，可以放到其他初始化逻辑里，不要都塞到一起，比如初始化块、onCreate里
                 adapter = RvAdapter(arrayListOf(
                     RvBean(
                         true,

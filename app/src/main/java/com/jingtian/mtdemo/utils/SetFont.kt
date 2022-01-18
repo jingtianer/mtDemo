@@ -10,6 +10,7 @@ import android.widget.TextView
 class SetFont {
     companion object {
         fun setFont(view:TextView, context:Context) {
+            // TODO: 这里是否可以加个内存缓存，不用每次都去加载
             view.typeface = Typeface.createFromAsset(context.assets, "iconfont.ttf")
         }
         fun getScreenHeight(activity: Activity):Int = activity.resources.displayMetrics.heightPixels
