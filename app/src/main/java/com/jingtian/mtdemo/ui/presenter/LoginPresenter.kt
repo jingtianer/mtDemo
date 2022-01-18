@@ -2,6 +2,9 @@ package com.jingtian.mtdemo.ui.presenter
 
 import com.jingtian.mtdemo.base.presenter.BasePresenter
 import com.jingtian.mtdemo.bean.BaseResult
+import com.jingtian.mtdemo.net.NetConstants.Companion.LOGIN_BY_PD_FAIL
+import com.jingtian.mtdemo.net.NetConstants.Companion.LOGIN_BY_VC_FAIL
+import com.jingtian.mtdemo.net.NetConstants.Companion.LOGIN_SUCCESS
 import com.jingtian.mtdemo.ui.interfaces.LoginInterface
 import retrofit2.Call
 import retrofit2.Callback
@@ -41,11 +44,10 @@ class LoginPresenter: BasePresenter<LoginInterface.View>(), LoginInterface.Prese
                 response: Response<BaseResult<Any>>
             ) {
                 when (response.body()?.code) {
-                    // TODO: 返回code这类特殊数字，也要用名字清晰的常量字段维护起来
-                    0 -> {
+                    LOGIN_SUCCESS -> {
                         mView?.loginSuccess()
                     }
-                    601 -> {
+                    LOGIN_BY_PD_FAIL -> {
                         mView?.loginByPdFailed(response.body()?.msg + "")
                     }
                     else -> {

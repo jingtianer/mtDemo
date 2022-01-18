@@ -14,7 +14,6 @@ import com.jingtian.mtdemo.base.view.BaseFragment
 import com.jingtian.mtdemo.R
 import com.jingtian.mtdemo.ui.interfaces.LoginInterface
 import com.jingtian.mtdemo.ui.presenter.LoginPresenter
-import com.jingtian.mtdemo.utils.SetFont
 
 
 
@@ -26,13 +25,14 @@ class PasswordFragment:BaseFragment<LoginPresenter>(), LoginInterface.View {
 
     private var isPassword = true
     private var agree = false
+    private var phoneTemp = ""
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        activity?.let { it ->
+        view.let { it ->
             //checkbox图标切换
             val tvCheckboxLogin = it.findViewById<TextView>(R.id.tv_checkbox_login)
             val llAgreementLogin = it.findViewById<LinearLayout>(R.id.ll_agreement_login)
-            SetFont.setFont(tvCheckboxLogin, it)
+            BaseApplication.utils.setFont(tvCheckboxLogin)
             llAgreementLogin.setOnClickListener {
                 if (agree) {
                     tvCheckboxLogin.setText(R.string.unchecked)
@@ -59,12 +59,14 @@ class PasswordFragment:BaseFragment<LoginPresenter>(), LoginInterface.View {
                             llPwd.visibility = View.GONE
                             pwdDivider2.visibility = View.GONE
                         }
+
                         override fun onAnimationRepeat(p0: Animation?) {}
                     })
                     itemIn.setAnimationListener(object : Animation.AnimationListener {
                         override fun onAnimationStart(p0: Animation?) {
                             tvPwdLoginHint.visibility = View.VISIBLE
                         }
+
                         override fun onAnimationEnd(p0: Animation?) {}
                         override fun onAnimationRepeat(p0: Animation?) {}
                     })
@@ -81,6 +83,7 @@ class PasswordFragment:BaseFragment<LoginPresenter>(), LoginInterface.View {
                         override fun onAnimationEnd(p0: Animation?) {
                             tvPwdLoginHint.visibility = View.GONE
                         }
+
                         override fun onAnimationRepeat(p0: Animation?) {}
                     })
                     itemIn.setAnimationListener(object : Animation.AnimationListener {
@@ -88,6 +91,7 @@ class PasswordFragment:BaseFragment<LoginPresenter>(), LoginInterface.View {
                             llPwd.visibility = View.VISIBLE
                             pwdDivider2.visibility = View.VISIBLE
                         }
+
                         override fun onAnimationEnd(p0: Animation?) {}
                         override fun onAnimationRepeat(p0: Animation?) {}
                     })
@@ -102,7 +106,7 @@ class PasswordFragment:BaseFragment<LoginPresenter>(), LoginInterface.View {
             //获取输入框
             val etPhone = it.findViewById<EditText>(R.id.et_phone)
             val etPwd = it.findViewById<EditText>(R.id.et_pwd)
-            etPhone.addTextChangedListener(object :TextWatcher {
+            etPhone.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
                 override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -115,12 +119,13 @@ class PasswordFragment:BaseFragment<LoginPresenter>(), LoginInterface.View {
 
             //显示密码按钮
             val tvShowPdLogin = it.findViewById<TextView>(R.id.tv_show_pd_login)
-            SetFont.setFont(tvShowPdLogin, it)
+            BaseApplication.utils.setFont(tvShowPdLogin)
             tvShowPdLogin.setOnTouchListener { _, motionEvent ->
                 if (motionEvent.action == MotionEvent.ACTION_DOWN) {
                     etPwd.inputType = (InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD)
-                }else if (motionEvent.action == MotionEvent.ACTION_UP) {
-                    etPwd.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                } else if (motionEvent.action == MotionEvent.ACTION_UP) {
+                    etPwd.inputType =
+                        InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
                 }
                 etPwd.setSelection(etPwd.text.toString().length)
                 true
@@ -136,8 +141,7 @@ class PasswordFragment:BaseFragment<LoginPresenter>(), LoginInterface.View {
                     Toast.makeText(context, "请输入正确的手机号", Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
-                // TODO: 还没登录成功，怎么就开始记录输入的信息了？
-                BaseApplication.sp.phone = etPhone.text.toString()
+                phoneTemp = etPhone.text.toString()
                 if (isPassword && etPwd.text.toString().isBlank()) {
                     flPwd.startAnimation(shake)
                     Toast.makeText(context, "请输入密码", Toast.LENGTH_SHORT).show()
@@ -153,16 +157,16 @@ class PasswordFragment:BaseFragment<LoginPresenter>(), LoginInterface.View {
                     val pwd = etPwd.text.toString()
                     mPresenter?.loginByPd(phone, pwd)
                 } else {
-                    verifyCodeFragment = VerifyCodeFragment.getInstance(this)
+                    verifyCodeFragment = VerifyCodeFragment.getInstance(this,phoneTemp)
                     verifyCodeFragment?.let {
                         activity?.supportFragmentManager?.beginTransaction()
                             ?.replace(R.id.login_frame, it)?.commit()
                     }
-//                activity?.let {
-//                    it.supportFragmentManager.beginTransaction()
-//                    .replace(R.id.login_frame, verifyCodeFragment!!)
-//                    .commit()
-//                } 
+    //                activity?.let {
+    //                    it.supportFragmentManager.beginTransaction()
+    //                    .replace(R.id.login_frame, verifyCodeFragment!!)
+    //                    .commit()
+    //                }
 
                 }
             }
@@ -176,8 +180,9 @@ class PasswordFragment:BaseFragment<LoginPresenter>(), LoginInterface.View {
     }
 
     override fun loginSuccess() {
-        activity?.finish()
         BaseApplication.sp.login = true
+        BaseApplication.sp.phone = phoneTemp
+        activity?.finish()
     }
 
     override fun loginByVcFailed(mes: String) {

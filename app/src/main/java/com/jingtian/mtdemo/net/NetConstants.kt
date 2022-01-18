@@ -9,7 +9,9 @@ import java.util.concurrent.TimeUnit
 
 class NetConstants {
     companion object {
-
+        const val LOGIN_SUCCESS = 0
+        const val LOGIN_BY_VC_FAIL = 602
+        const val LOGIN_BY_PD_FAIL = 601
         private const val baseUrl = "http://49.232.223.216:8088/mt_server/"
         private val mInterface:NetInterface
 

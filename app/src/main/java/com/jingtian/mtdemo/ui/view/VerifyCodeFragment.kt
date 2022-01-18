@@ -26,6 +26,7 @@ class VerifyCodeFragment(private val passwordFragment: PasswordFragment):BaseFra
             if (verifyCodeFragment==null) {
                 verifyCodeFragment = VerifyCodeFragment(passwordFragment)
             }
+            VerifyCodeFragment.tempPhone = tempPhone
             return verifyCodeFragment!!
         }
     }
@@ -97,7 +98,7 @@ class VerifyCodeFragment(private val passwordFragment: PasswordFragment):BaseFra
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         super.onViewCreated(view, savedInstanceState)
-        activity?.let {
+        view.let {
             val tvCurPhone = it.findViewById<TextView>(R.id.tv_curphone)
             val etCode1 = it.findViewById<TextView>(R.id.et_code1)
             val etCode2 = it.findViewById<TextView>(R.id.et_code2)
@@ -114,7 +115,7 @@ class VerifyCodeFragment(private val passwordFragment: PasswordFragment):BaseFra
             etRealText.addTextChangedListener(VerifyCodeWatcher(etRealText, codes))
             etRealText.setOnKeyListener(KeyListener(codes))
 
-            tvCurPhone.text = BaseApplication.sp.phone
+            tvCurPhone.text = VerifyCodeFragment.tempPhone
             tvChangePhone.setOnClickListener {
                 activity?.supportFragmentManager?.beginTransaction()
                     ?.replace(R.id.login_frame, passwordFragment)?.commit()
@@ -144,8 +145,9 @@ class VerifyCodeFragment(private val passwordFragment: PasswordFragment):BaseFra
     }
 
     override fun loginSuccess() {
-        activity?.finish()
         BaseApplication.sp.login = true
+        BaseApplication.sp.phone = tempPhone
+        activity?.finish()
     }
 
     override fun loginByVcFailed(mes: String) {

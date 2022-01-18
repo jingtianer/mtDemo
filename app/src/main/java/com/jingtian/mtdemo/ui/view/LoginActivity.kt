@@ -20,7 +20,7 @@ class LoginActivity:BaseActivity<BaseInterface.Presenter>(), BaseInterface.View 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val text = findViewById<TextView>(R.id.login_left_exit)
-        SetFont.setFont(text, this)
+        BaseApplication.utils.setFont(text)
         text.setText(R.string.close)
         supportFragmentManager.beginTransaction()
             .replace(R.id.login_frame, PasswordFragment())

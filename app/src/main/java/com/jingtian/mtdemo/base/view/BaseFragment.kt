@@ -1,11 +1,14 @@
 package com.jingtian.mtdemo.base.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.jingtian.mtdemo.base.BaseApplication
 import com.jingtian.mtdemo.base.interfaces.BaseInterface
+import com.jingtian.mtdemo.ui.view.LoginActivity
 
 abstract class BaseFragment<T:BaseInterface.Presenter>:BaseInterface.View, Fragment() {
     var mPresenter:T? = null

@@ -12,7 +12,6 @@ import com.jingtian.mtdemo.ui.interfaces.MainInterface
 import com.jingtian.mtdemo.ui.presenter.MainPresenter
 
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.jingtian.mtdemo.R
@@ -46,37 +45,9 @@ class MainActivity: BaseActivity<MainInterface.Presenter>(), MainInterface.View 
             }
         }
     }
-    var pfListener:GestureDetector? = null
-    private val fragments = mutableMapOf<Int, Fragment>()
-    fun getInstance(i:Int):Fragment {
-        if (!fragments.containsKey(i)) {
-            //fragments[i] = Class.forName(naviArr[i].class_name).newInstance() as Fragment
-            fragments[i] = when(i) {
-                0->{
-                    HomeFragment()
-                }
-                1->{
-                    SortFragment()
-                }
-                2->{
-                    CartFragment()
-                }
-                3->{
-                    MineFragment()
-                }
-                else -> {
-                    HomeFragment()
-                }
-            }
-        }
-        return fragments[i]!!
-    }
-    fun login() {
-        if(!BaseApplication.sp.login) {
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
-        }
-    }
+
+    var pfListener: GestureDetector? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTransparentBars()
@@ -86,11 +57,8 @@ class MainActivity: BaseActivity<MainInterface.Presenter>(), MainInterface.View 
         }
         rcBtmNavi.adapter = NaviAdapter(naviArr, this, object :NaviItemClick {
             override fun click(position: Int) {
-                supportFragmentManager.beginTransaction()
-                    // TODO: 为什么不用ViewPager2？这种方式，Fragment每次切换过去会重新加载View，性能差，体验差
-                .replace(R.id.fl_main, getInstance(position))
-                .commit()
-                if (position == 3) {// TODO: 特殊数字要用名字清晰的常量维护起来
+                viewPagerMain.setCurrentItem(position, true)
+                if (naviArr[position].id == R.layout.fragment_mine) {
                     login()
                 }
             }
@@ -100,10 +68,10 @@ class MainActivity: BaseActivity<MainInterface.Presenter>(), MainInterface.View 
         var mHolder:NaviAdapter.ViewHolder?=null
     }
     private val naviArr = arrayListOf(
-        NaviBean(R.string.home, "首页"),
-        NaviBean(R.string.sort, "分类"),
-        NaviBean(R.string.cart, "购物车"),
-        NaviBean(R.string.mine, "我的")
+        NaviBean(R.string.home, "首页", R.layout.fragment_home),
+        NaviBean(R.string.sort, "分类", R.layout.fragment_sort),
+        NaviBean(R.string.cart, "购物车", R.layout.fragment_cart),
+        NaviBean(R.string.mine, "我的", R.layout.fragment_mine)
     )
     interface NaviItemClick {
         fun click(position:Int)
@@ -139,13 +107,13 @@ class MainActivity: BaseActivity<MainInterface.Presenter>(), MainInterface.View 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val item = naviArr[position]
             naviArr[position].mHolder = holder
-            SetFont.setFont(holder.itemNaviIcon, holder.itemNaviTitle.context)
+            BaseApplication.utils.setFont(holder.itemNaviIcon)
             holder.apply {
                 itemNaviTitle.text = item.title
                 itemNaviIcon.setTextColor(ContextCompat.getColor(activity, R.color.black))
                 itemNaviTitle.setTextColor(ContextCompat.getColor(activity, R.color.black))
                 itemNaviIcon.setText(item.icon)
-                if (position == 0) {
+                if (item.id == R.layout.fragment_home) {
                     click(position)
                 }
                 view.setOnClickListener {
@@ -155,9 +123,7 @@ class MainActivity: BaseActivity<MainInterface.Presenter>(), MainInterface.View 
         }
 
         private fun click(position: Int) {
-
-
-            for(i in 0 until naviArr.size) {
+            for (i in 0 until naviArr.size) {
                 naviArr[i].mHolder?.onTouch(i == position)
             }
             //点击时改变颜色

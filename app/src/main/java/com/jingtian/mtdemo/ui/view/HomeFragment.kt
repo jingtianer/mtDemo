@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.*
 import android.widget.ImageView
@@ -38,7 +39,7 @@ class HomeFragment: BaseFragment<BaseInterface.Presenter>() {
     private var callback:ViewFlipperTouchEvent? = null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        activity?.let {
+        getView()?.let {
             val homeSearchBar = it.findViewById<LinearLayout>(R.id.home_search_bar)
             homeSearchBar.layoutParams =
                 (homeSearchBar.layoutParams as LinearLayout.LayoutParams).apply {
@@ -89,87 +90,52 @@ class HomeFragment: BaseFragment<BaseInterface.Presenter>() {
                 }
                 override fun getItemCount(): Int = arr.size
             }
-        }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        activity?.let {
             val vfMain = it.findViewById<ViewFlipper>(R.id.vf_main)
-            // TODO: 图片都放drawable下了，drawable/drawable-xxhdpi等目录什么区别?
-            val imgRes = arrayListOf(
-                R.drawable.main_vf_1,
-                R.drawable.main_vf_2,
-                R.drawable.main_vf_3,
-                R.drawable.main_vf_4,
-                R.drawable.main_vf_5)
-            val commodityRes = arrayListOf(
-                R.drawable.commodities1,
-                R.drawable.commodities2,
-                R.drawable.commodities3,
-                R.drawable.commodities4,
-                R.drawable.commodities5,
-                R.drawable.commodities6,
-                R.drawable.commodities7,
-                R.drawable.commodities8,
-                R.drawable.commodities9,
-                R.drawable.commodities10,
-                R.drawable.commodities11,
-                R.drawable.commodities12,
-                R.drawable.commodities13,
-                R.drawable.commodities14,
-                R.drawable.commodities15,
-                R.drawable.commodities16,
-                R.drawable.commodities17,
-            )
-            // TODO: 在onStart这个方法里进行View的初始化，是否会多次执行导致数据冗余等问题？
             for (img in imgRes) {
-                vfMain.addView(ImageView(context).apply {
-                    val bitmap = BitmapFactory.decodeResource(resources, img)
-                    val distW = getScreenWidth(it)*0.95
-                    val distH = bitmap.height * (1.0*distW/bitmap.width)
-                    background = Bitmap.createScaledBitmap(bitmap, distW.toInt(), distH.toInt(),false).toDrawable(resources)
+                vfMain.addView(ImageView(it.context).apply {
+                    setImageBitmap(getImg(img))
                 })
             }
             vfMain.startFlipping()
-            callback = (it as MainActivity).getCallback()
-            val gestureDetector = GestureDetector(context, ViewFlipperTouchListener(vfMain, context))
-            callback?.registerListener(gestureDetector)
             val rvCommodity = it.findViewById<RecyclerView>(R.id.rv_commodity)
             rvCommodity.apply {
-                layoutManager = StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL).apply {
-
-                }
-                adapter = RvCommodityAdapter(it, commodityRes)
+                RvCommodityAdapter.setWaterfallFlowStyle(this, 2, RvCommodityAdapter.VERTICAL)
+                adapter = RvCommodityAdapter(it.context)
             }
         }
+    }
+
+    private fun getImg(img: Int): Bitmap? {
+        view?.let {
+            val bitmap = BitmapFactory.decodeResource(resources, img)
+            val distW = BaseApplication.utils.getScreenWidth() * 0.95
+            val distH = bitmap.height * (1.0 * distW / bitmap.width)
+            return Bitmap.createScaledBitmap(bitmap, distW.toInt(), distH.toInt(), false)
+        }
+        return null
 
     }
-    class RvCommodityAdapter(private val activity: Activity, private val commodityRes:ArrayList<Int>): RecyclerView.Adapter<RvCommodityAdapter.ViewHolder>() {
-        class ViewHolder(val view: View): RecyclerView.ViewHolder(view) {
-            val ivCommodity:ImageView = view.findViewById(R.id.iv_commodity)
-            val tvItemCommodity:TextView = view.findViewById(R.id.tv_item_commodity)
-            val tvItemCommodityPrice:TextView = view.findViewById(R.id.tv_item_commodity_price)
 
-        }
+    private val imgRes = arrayListOf(
+        (R.mipmap.main_vf_1),
+        (R.mipmap.main_vf_2),
+        (R.mipmap.main_vf_3),
+        (R.mipmap.main_vf_4),
+        (R.mipmap.main_vf_5)
+    )
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-            return ViewHolder(LayoutInflater.from(activity).inflate(R.layout.item_commodity,parent,false).apply {
-            })
-        }
-        private val random = Random(System.currentTimeMillis())
-        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            val n = 1 + abs(random.nextInt() % 10)
-            var discription = ""
-            for (i in 0..n) {
-                discription += "描述！"
-            }
-            holder.apply {
-                ivCommodity.setImageResource(commodityRes[position])
-                tvItemCommodity.text = activity.getString(R.string.tvItemCommodity, position+1, discription)
-                tvItemCommodityPrice.text = activity.getString(R.string.tvItemCommodityPrice, 100+abs(random.nextInt() % 1000))
+    override fun onStart() {
+        super.onStart()
+        if (activity != null) {
+            val vfMain = view?.findViewById<ViewFlipper>(R.id.vf_main)
+            vfMain?.let {
+                callback = (activity as MainActivity).getCallback()
+                val gestureDetector =
+                    GestureDetector(context, ViewFlipperTouchListener(it, context))
+                callback?.registerListener(gestureDetector)
             }
         }
+    }
 
         override fun getItemCount(): Int = commodityRes.size
     }
