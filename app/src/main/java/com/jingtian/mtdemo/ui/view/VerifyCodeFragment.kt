@@ -144,7 +144,7 @@ class VerifyCodeFragment(private val passwordFragment: PasswordFragment):BaseFra
     }
 
     override fun loginSuccess() {
-        Toast.makeText(activity, "登录成功", Toast.LENGTH_SHORT).show()
+        activity?.finish()
         BaseApplication.sp.login = true
     }
 

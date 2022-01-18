@@ -25,11 +25,16 @@ class MineFragment: BaseFragment<BaseInterface.Presenter>() {
         return BasePresenter<HomeFragment>()
     }
 
+    override fun onResume() {
+        super.onResume()
+        activity?.let {
+            val tvMineId = it.findViewById<TextView>(R.id.tv_mine_id)
+            tvMineId.text = BaseApplication.sp.phone
+        }
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         activity?.let {
-            val tvMineId  = it.findViewById<TextView>(R.id.tv_mine_id)
-            tvMineId.text = BaseApplication.sp.phone
             val tvMineSettings = it.findViewById<TextView>(R.id.tv_mine_settings)
             val tvMineNotification = it.findViewById<TextView>(R.id.tv_mine_notification)
             SetFont.setFont(tvMineSettings,it)

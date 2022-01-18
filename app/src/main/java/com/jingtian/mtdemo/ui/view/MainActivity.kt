@@ -44,14 +44,30 @@ class MainActivity: BaseActivity<MainInterface.Presenter>(), MainInterface.View 
             override fun unRegisterListener() {
                 pfListener = null
             }
-
         }
     }
     var pfListener:GestureDetector? = null
     private val fragments = mutableMapOf<Int, Fragment>()
     fun getInstance(i:Int):Fragment {
         if (!fragments.containsKey(i)) {
-            fragments[i] = Class.forName(naviArr[i].class_name).newInstance() as Fragment
+            //fragments[i] = Class.forName(naviArr[i].class_name).newInstance() as Fragment
+            fragments[i] = when(i) {
+                0->{
+                    HomeFragment()
+                }
+                1->{
+                    SortFragment()
+                }
+                2->{
+                    CartFragment()
+                }
+                3->{
+                    MineFragment()
+                }
+                else -> {
+                    HomeFragment()
+                }
+            }
         }
         return fragments[i]!!
     }
@@ -79,14 +95,14 @@ class MainActivity: BaseActivity<MainInterface.Presenter>(), MainInterface.View 
             }
         })
     }
-    data class NaviBean(val icon:Int, val title:String, val class_name:String) {
+    data class NaviBean(val icon:Int, val title:String) {
         var mHolder:NaviAdapter.ViewHolder?=null
     }
     private val naviArr = arrayListOf(
-        NaviBean(R.string.home, "首页","com.jingtian.mtdemo.ui.view.HomeFragment"),
-        NaviBean(R.string.sort, "分类","com.jingtian.mtdemo.ui.view.SortFragment"),
-        NaviBean(R.string.cart, "购物车","com.jingtian.mtdemo.ui.view.CartFragment"),
-        NaviBean(R.string.mine, "我的","com.jingtian.mtdemo.ui.view.MineFragment")
+        NaviBean(R.string.home, "首页"),
+        NaviBean(R.string.sort, "分类"),
+        NaviBean(R.string.cart, "购物车"),
+        NaviBean(R.string.mine, "我的")
     )
     interface NaviItemClick {
         fun click(position:Int)
