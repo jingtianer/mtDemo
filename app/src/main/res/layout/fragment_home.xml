@@ -29,6 +29,9 @@
             android:textSize="20sp" />
 
         <EditText
+            android:hint="@string/home_search_hint"
+            android:inputType="text"
+            android:autofillHints="@null"
             android:id="@+id/et_search_bar"
             android:layout_width="match_parent"
             android:layout_height="42dp"
@@ -58,9 +61,11 @@
                     android:orientation="vertical">
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rc_home_function"
+                        android:layout_weight="1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"/>
                     <androidx.cardview.widget.CardView
+                        android:layout_weight="0"
                         android:layout_gravity="center"
                         app:cardCornerRadius="20dp"
                         android:orientation="vertical"

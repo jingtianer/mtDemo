@@ -40,5 +40,16 @@
     <string name="more">&#xe73a;</string>
 
 
+    <string name="tvItemCommodity">"商品%d\n%s"</string>
+    <string name="tvItemCommodityPrice">"＄%d"</string>
+    <string name="tvDelay">"%ds"</string>
+    <string name="send_again">再次发送</string>
+    <string name="vc_hint">验证码已发生至：</string>
+    <string name="vc_change_phone">更换手机号码</string>
+    <string name="vc_title">验证码</string>
+    <string name="login_title_assist">帮助</string>
+    <string name="button_skip">跳过</string>
+    <string name="home_search_hint">搜索</string>
+
 
 </resources>
