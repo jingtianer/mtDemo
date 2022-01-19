@@ -76,9 +76,11 @@ class CartFragment: BaseFragment<BaseInterface.Presenter>() {
         isBottomBarShown = true
     }
 
-    private fun bottomBarExitDown() {
+    private fun bottomBarExitDown(delay: Long = 0) {
         bottomBar?.apply {
-            startAnimation(BaseApplication.anims.exitAnimation())
+            startAnimation(BaseApplication.anims.exitAnimation().apply {
+                startOffset = delay
+            })
         }
         isBottomBarShown = false
     }
@@ -107,7 +109,7 @@ class CartFragment: BaseFragment<BaseInterface.Presenter>() {
         }
     }
 
-    private var bottomBar: ConstraintLayout? = null
+    private var bottomBar: LinearLayout? = null
     private var tvLabelLeft: TextView? = null
     private var tvLabelRight: TextView? = null
     private var tvSelectAll: TextView? = null
@@ -132,14 +134,13 @@ class CartFragment: BaseFragment<BaseInterface.Presenter>() {
             mPresenter?.requestCartData()
             //初始化按钮与点击操作
             initButtons(it)
-            bottomBar = it.findViewById(R.id.cl_cart_bottom)
-            bottomBarExitDown()
+            bottomBar = it.findViewById(R.id.ll_cart_bottom)
             tvSelectAll = it.findViewById(R.id.tv_cart_select_all)
             val rvCart = it.findViewById<RecyclerView>(R.id.rv_cart_cart)
             tvSelectAll?.apply {
                 BaseApplication.utils.setFont(this)
                 text = BaseApplication.utils.getString(R.string.unchecked)
-                setOnClickListener {
+                it.findViewById<ConstraintLayout>(R.id.cl_cart_select_all)?.setOnClickListener {
                     if (isBottomBarShown) {
                         text = if (isSelectAll()) {
                             (rvCart.adapter as CartAdapter).unselectAll()
@@ -151,6 +152,7 @@ class CartFragment: BaseFragment<BaseInterface.Presenter>() {
                     }
                 }
             }
+
         }
     }
 
@@ -180,6 +182,7 @@ class CartFragment: BaseFragment<BaseInterface.Presenter>() {
                 selectedItem.clear()
                 map.clear()
                 selectCount = 0
+                bottomBarExitDown()
                 updateTotal()
                 disableButton(tvLabelRight)
             }
@@ -196,8 +199,9 @@ class CartFragment: BaseFragment<BaseInterface.Presenter>() {
                 selectedItem.clear()
                 map.clear()
                 selectCount = 0
-                disableButton(tvLabelRight)
                 updateTotal()
+                bottomBarExitDown()
+                disableButton(tvLabelRight)
             }
         }
         disableButton(tvLabelRight)
@@ -227,4 +231,8 @@ class CartFragment: BaseFragment<BaseInterface.Presenter>() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        bottomBarExitDown(300)
+    }
 }

@@ -138,10 +138,8 @@ import kotlin.random.Random
     override fun provideCommodityData(commodities: ArrayList<Int>) {
         view?.let {
             val rvCommodity = it.findViewById<RecyclerView>(R.id.rv_commodity)
-            rvCommodity.apply {
-                RvCommodityAdapter.setWaterfallFlowStyle(this, 2, RvCommodityAdapter.VERTICAL)
-                adapter = RvCommodityAdapter(it.context, commodities)
-            }
+            RvCommodityAdapter.setWaterfallFlowStyle(rvCommodity, 2, RvCommodityAdapter.VERTICAL)
+            rvCommodity.adapter = RvCommodityAdapter(requireActivity(), commodities)
         }
     }
 }

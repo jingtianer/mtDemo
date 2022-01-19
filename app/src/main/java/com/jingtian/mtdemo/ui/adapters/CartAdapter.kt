@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.jingtian.mtdemo.R
 import com.jingtian.mtdemo.base.BaseApplication
@@ -52,6 +53,7 @@ class CartAdapter(
         val tvItemName: TextView = view.findViewById(R.id.tv_cart_commodity)
         val tvPrice: TextView = view.findViewById(R.id.tv_cart_price)
         val cartNumberPicker: CartNumberPicker = view.findViewById(R.id.cnp_number_picker)
+        val clCartItemRoot = view.findViewById<ConstraintLayout>(R.id.cl_cart_item_root)
 
     }
 
@@ -63,7 +65,7 @@ class CartAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.apply {
-            data[position].checkBox = tvCartIcon
+            data[position].checkBox = clCartItemRoot
             BaseApplication.utils.setFont(tvCartIcon)
             val item = data[position]
             tvCartIcon.setText(R.string.unchecked)
@@ -96,7 +98,7 @@ class CartAdapter(
                 )
                 setSpan(AbsoluteSizeSpan(BaseApplication.utils.dip2px(22f)), 1, price.length, 0)
             }
-            tvCartIcon.setOnClickListener {
+            clCartItemRoot.setOnClickListener {
                 listener1.click(tvCartIcon, item.selection, item)
                 item.selection = !item.selection
             }
