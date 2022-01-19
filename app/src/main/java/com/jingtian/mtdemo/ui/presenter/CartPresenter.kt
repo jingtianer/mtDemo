@@ -66,6 +66,6 @@ class CartPresenter : BasePresenter<CartInterface.View>(), CartInterface.Present
     }
 
     override fun requestGuessData() {
-        mView?.provideGuessData(RvCommodityAdapter.res)
+        mView?.provideGuessData(RvCommodityAdapter.getRes())
     }
 }

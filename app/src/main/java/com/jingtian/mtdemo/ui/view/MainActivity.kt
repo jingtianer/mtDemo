@@ -5,19 +5,18 @@ import android.os.Build
 import android.os.Bundle
 import android.view.*
 import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
-import com.jingtian.mtdemo.base.view.BaseActivity
-import com.jingtian.mtdemo.ui.interfaces.MainInterface
-import com.jingtian.mtdemo.ui.presenter.MainPresenter
-
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
 import com.jingtian.mtdemo.R
-import com.jingtian.mtdemo.utils.SetFont
-import kotlin.collections.ArrayList
-
 import com.jingtian.mtdemo.base.BaseApplication
+import com.jingtian.mtdemo.base.view.BaseActivity
+import com.jingtian.mtdemo.bean.NaviBean
+import com.jingtian.mtdemo.ui.adapters.MainViewPagerAdapter
+import com.jingtian.mtdemo.ui.interfaces.MainInterface
+import com.jingtian.mtdemo.ui.presenter.MainPresenter
 
 
 class MainActivity: BaseActivity<MainInterface.Presenter>(), MainInterface.View {
@@ -46,7 +45,19 @@ class MainActivity: BaseActivity<MainInterface.Presenter>(), MainInterface.View 
     }
 
     var pfListener: GestureDetector? = null
-
+    private var pagerCallback = object : ViewPager2.OnPageChangeCallback() {
+        override fun onPageSelected(position: Int) {
+            super.onPageSelected(position)
+            (rcBtmNavi?.adapter as NaviAdapter).apply {
+                changeSelectedItem(position)
+                if (getLayoutId(position) == R.layout.fragment_mine) {
+                    login()
+                }
+            }
+        }
+    }
+    var rcBtmNavi: RecyclerView? = null
+    var viewPagerMain: ViewPager2? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTransparentBars()

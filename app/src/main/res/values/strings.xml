@@ -41,7 +41,7 @@
 
 
     <string name="tvItemCommodity">"商品%d\n%s"</string>
-    <string name="tvItemCommodityPrice">"＄%d"</string>
+    <string name="tvItemCommodityPrice">"￥%.2f"</string>
     <string name="tvDelay">"%ds"</string>
     <string name="send_again">再次发送</string>
     <string name="vc_hint">验证码已发生至：</string>
@@ -71,5 +71,8 @@
     <string name="vip_bt">立即开通</string>
     <string name="default_username">我的用户名</string>
     <string name="content_discreption_profile">头像</string>
+    <string name="cart_select_all">全选</string>
+    <string name="cart_total">合计:</string>
+    <string name="cart_purchase">买买买！</string>
 
 </resources>

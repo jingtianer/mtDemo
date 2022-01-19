@@ -15,32 +15,80 @@ class CartFragment: BaseFragment<BaseInterface.Presenter>() {
     }
 
     private var selectCount = 0
+    fun incSelectCount() {
+        if (selectCount == 0) {
+            enableButton(tvLabelRight)
+            bottomBarShowUp()
+        }
+
+        selectCount++
+        if (isSelectAll()) {
+            tvSelectAll?.text = BaseApplication.utils.getString(R.string.checked)
+        }
+    }
+
+    fun decSelectionCount() {
+        if (selectCount - 1 == 0) {
+            disableButton(tvLabelRight)
+            bottomBarExitDown()
+        }
+        tvSelectAll?.text = BaseApplication.utils.getString(R.string.unchecked)
+        selectCount--
+    }
+
     val selectedItem = mutableListOf<CartBean>()
     private val listener1 = object : SelectionClickListener {
         override fun click(view: TextView, selection: Boolean, bean: CartBean) {
             if (selection) {
                 view.setText(R.string.unchecked)
-                selectCount--
+                decSelectionCount()
                 selectedItem.remove(bean)
             } else {
                 view.setText(R.string.checked)
                 if (!selectedItem.contains(bean)) {
                     selectedItem.add(bean)
                 }
-                selectCount++
+                incSelectCount()
             }
-            if (selectCount > 0) {
-                enableButton(tvLabelRight)
-            } else {
-                disableButton(tvLabelRight)
-            }
+            updateTotal()
         }
 
     }
+
+    fun updateTotal() {
+        var totalPrice = 0f
+        for (item in selectedItem) {
+            if (map.containsKey(item.pic)) {
+                totalPrice += item.price * map[item.pic]!!
+                Log.d("价格", "$totalPrice")
+            }
+        }
+        cartTotal?.text = "$totalPrice"
+
+    }
+
+    var isBottomBarShown = false
+    private fun bottomBarShowUp() {
+        if (isBottomBarShown) return
+        bottomBar?.apply {
+            startAnimation(BaseApplication.anims.showUpAnimation())
+        }
+        isBottomBarShown = true
+    }
+
+    private fun bottomBarExitDown() {
+        bottomBar?.apply {
+            startAnimation(BaseApplication.anims.exitAnimation())
+        }
+        isBottomBarShown = false
+    }
+
     private val map = mutableMapOf<Int, Int>()
     private val listener2 = object : NumberClickListener {
-        override fun click(view: CartNumberPicker, position: Int) {
-            map[position] = view.getNumber()
+        override fun click(view: CartNumberPicker, id: Int) {
+            map[id] = view.getNumber()
+            Log.d("total", "${map[id]}")
+            updateTotal()
         }
     }
 
@@ -59,8 +107,12 @@ class CartFragment: BaseFragment<BaseInterface.Presenter>() {
         }
     }
 
+    private var bottomBar: ConstraintLayout? = null
     private var tvLabelLeft: TextView? = null
     private var tvLabelRight: TextView? = null
+    private var tvSelectAll: TextView? = null
+    private var cartTotal: TextView? = null
+    private fun isSelectAll() = selectCount == mCartAdapter?.itemCount
     private fun getToolbar(view: View) = view.findViewById<LinearLayout>(R.id.ll_toolbar_root)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -74,11 +126,31 @@ class CartFragment: BaseFragment<BaseInterface.Presenter>() {
                     paddingBottom
                 )
             }
+            cartTotal = it.findViewById(R.id.cart_total)
             //请求recyclerview的数据
             mPresenter?.requestGuessData()
             mPresenter?.requestCartData()
             //初始化按钮与点击操作
             initButtons(it)
+            bottomBar = it.findViewById(R.id.cl_cart_bottom)
+            bottomBarExitDown()
+            tvSelectAll = it.findViewById(R.id.tv_cart_select_all)
+            val rvCart = it.findViewById<RecyclerView>(R.id.rv_cart_cart)
+            tvSelectAll?.apply {
+                BaseApplication.utils.setFont(this)
+                text = BaseApplication.utils.getString(R.string.unchecked)
+                setOnClickListener {
+                    if (isBottomBarShown) {
+                        text = if (isSelectAll()) {
+                            (rvCart.adapter as CartAdapter).unselectAll()
+                            BaseApplication.utils.getString(R.string.unchecked)
+                        } else {
+                            (rvCart.adapter as CartAdapter).selectAll()
+                            BaseApplication.utils.getString(R.string.checked)
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -91,7 +163,7 @@ class CartFragment: BaseFragment<BaseInterface.Presenter>() {
     }
 
 
-    fun initButtons(it: View) {
+    private fun initButtons(it: View) {
         val toolbar = getToolbar(it)
         val tvTitle = toolbar.findViewById<TextView>(R.id.tv_label_title)
         tvTitle.text = "购物车"
@@ -105,6 +177,11 @@ class CartFragment: BaseFragment<BaseInterface.Presenter>() {
                 while (adapter.data.size > 0) {
                     adapter.removeAt(0)
                 }
+                selectedItem.clear()
+                map.clear()
+                selectCount = 0
+                updateTotal()
+                disableButton(tvLabelRight)
             }
             disableButton(tvLabelRight)
             selectCount = 0
@@ -117,24 +194,27 @@ class CartFragment: BaseFragment<BaseInterface.Presenter>() {
                     adapter.removeAt(adapter.data.indexOf(item))
                 }
                 selectedItem.clear()
+                map.clear()
                 selectCount = 0
                 disableButton(tvLabelRight)
+                updateTotal()
             }
         }
         disableButton(tvLabelRight)
         enableButton(tvLabelLeft)
     }
 
-
+    var mCartAdapter: CartAdapter? = null
     override fun getPresenter(): CartPresenter = CartPresenter()
     override fun provideCartData(cartData: ArrayList<CartBean>) {
         view?.let {
+            mCartAdapter = CartAdapter(requireActivity(), cartData, listener1, listener2)
             val rvCart = it.findViewById<RecyclerView>(R.id.rv_cart_cart)
-            rvCart.apply {
+            rvCart?.apply {
                 layoutManager = LinearLayoutManager(context).apply {
                     orientation = LinearLayoutManager.VERTICAL
                 }
-                adapter = CartAdapter(requireActivity(), cartData, listener1, listener2)
+                adapter = mCartAdapter
             }
         }
     }

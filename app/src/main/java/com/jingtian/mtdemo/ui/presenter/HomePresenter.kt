@@ -34,6 +34,6 @@ class HomePresenter : BasePresenter<HomeInterface.View>(), HomeInterface.Present
     }
 
     override fun requestCommodityData() {
-        mView?.provideCommodityData(RvCommodityAdapter.res)
+        mView?.provideCommodityData(RvCommodityAdapter.getRes())
     }
 }

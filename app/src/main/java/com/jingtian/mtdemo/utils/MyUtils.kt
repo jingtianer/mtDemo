@@ -20,7 +20,7 @@ class MyUtils(val context: Context) {
         return description
     }
 
-    fun getPrice() = 100 + abs(random.nextInt() % 1000)
+    fun getPrice() = 100f + abs(random.nextInt() % 1000)
 
     private val typefaceMap = mutableMapOf<String, Typeface>()
     private fun getTypeFace(path: String): Typeface? {

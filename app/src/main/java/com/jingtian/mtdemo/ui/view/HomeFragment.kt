@@ -140,7 +140,7 @@ import kotlin.random.Random
             val rvCommodity = it.findViewById<RecyclerView>(R.id.rv_commodity)
             rvCommodity.apply {
                 RvCommodityAdapter.setWaterfallFlowStyle(this, 2, RvCommodityAdapter.VERTICAL)
-                adapter = RvCommodityAdapter(it.context, RvCommodityAdapter.res)
+                adapter = RvCommodityAdapter(it.context, commodities)
             }
         }
     }

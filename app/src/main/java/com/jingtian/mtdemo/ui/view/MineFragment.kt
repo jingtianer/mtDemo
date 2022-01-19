@@ -28,12 +28,11 @@ class MineFragment : BaseFragment<MinePresenter>(), MineInterface.View {
         view?.findViewById<TextView>(R.id.tv_mine_id)?.text =
             if (BaseApplication.sp.login) BaseApplication.sp.phone
             else "暂未登录"
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        login()
+        //login()
         view.let {
             val tvMineSettings = it.findViewById<TextView>(R.id.tv_mine_settings)
             val tvMineNotification = it.findViewById<TextView>(R.id.tv_mine_notification)

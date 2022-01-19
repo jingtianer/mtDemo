@@ -5,11 +5,19 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import com.jingtian.mtdemo.R
 import com.jingtian.mtdemo.base.BaseApplication
 
 class CartNumberPicker(context: Context, attrs: AttributeSet?) : LinearLayout(context, attrs) {
+    interface OnClickListener {
+        fun click(isLeft: Boolean)
+    }
+
+    val listeners = mutableListOf<OnClickListener>()
+    fun addClickListener(listener: OnClickListener) {
+        listeners.add(listener)
+    }
+
     private var number = 0
     fun getNumber(): Int {
         return number
@@ -38,15 +46,21 @@ class CartNumberPicker(context: Context, attrs: AttributeSet?) : LinearLayout(co
         rightButton.text = context.getString(R.string.add)
         leftButton.setOnClickListener {
             if (isNonNegative && number - 1 < 0) {
-                Toast.makeText(context, "不支持负数哦", Toast.LENGTH_SHORT).show()
+                this.startAnimation(BaseApplication.anims.shakeAnimation())
             } else {
                 number--
                 numberTextView.text = "$number"
+            }
+            for (listener in listeners) {
+                listener.click(true)
             }
         }
         rightButton.setOnClickListener {
             number++
             numberTextView.text = "$number"
+            for (listener in listeners) {
+                listener.click(false)
+            }
         }
 
     }

@@ -5,8 +5,15 @@ import android.view.animation.*
 import com.jingtian.mtdemo.R
 
 class AnimationUtil(val context: Context) {
-    fun ShakeAnimation():Animation {
-        val shake = AnimationUtils.loadAnimation(context, R.anim.shake)
-        return shake
+    fun shakeAnimation(): Animation {
+        return AnimationUtils.loadAnimation(context, R.anim.shake)
+    }
+
+    fun showUpAnimation(): Animation {
+        return AnimationUtils.loadAnimation(context, R.anim.show_up)
+    }
+
+    fun exitAnimation(): Animation {
+        return AnimationUtils.loadAnimation(context, R.anim.exit_down)
     }
 }

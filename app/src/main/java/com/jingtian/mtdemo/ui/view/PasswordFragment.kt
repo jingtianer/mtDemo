@@ -134,7 +134,7 @@ class PasswordFragment:BaseFragment<LoginPresenter>(), LoginInterface.View {
             val llPhoneLogin = it.findViewById<FrameLayout>(R.id.ll_phone_login)
             val flPwd = it.findViewById<FrameLayout>(R.id.fl_pwd)
             btLogin.setOnClickListener {
-                val shake = BaseApplication.anims.ShakeAnimation()
+                val shake = BaseApplication.anims.shakeAnimation()
                 val phone = etPhone.text.toString().trim()
                 if (phone.length != 11) {
                     llPhoneLogin.startAnimation(shake)

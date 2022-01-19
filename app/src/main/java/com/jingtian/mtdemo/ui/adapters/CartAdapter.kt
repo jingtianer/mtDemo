@@ -31,6 +31,20 @@ class CartAdapter(
         notifyItemRemoved(position)
     }
 
+    fun selectAll() {
+        for (i in 0 until data.size) {
+            if (!data[i].selection)
+                data[i].checkBox?.performClick()
+        }
+    }
+
+    fun unselectAll() {
+        for (i in 0 until data.size) {
+            if (data[i].selection)
+                data[i].checkBox?.performClick()
+        }
+    }
+
     class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
 
         val tvCartIcon: TextView = view.findViewById(R.id.tv_cart_icon)
@@ -49,6 +63,7 @@ class CartAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.apply {
+            data[position].checkBox = tvCartIcon
             BaseApplication.utils.setFont(tvCartIcon)
             val item = data[position]
             tvCartIcon.setText(R.string.unchecked)
@@ -85,9 +100,13 @@ class CartAdapter(
                 listener1.click(tvCartIcon, item.selection, item)
                 item.selection = !item.selection
             }
-            cartNumberPicker.setOnClickListener {
-                listener2.click(cartNumberPicker, position)
-            }
+            cartNumberPicker.addClickListener(
+                object : CartNumberPicker.OnClickListener {
+                    override fun click(isLeft: Boolean) {
+                        listener2.click(cartNumberPicker, item.pic)
+                    }
+                }
+            )
         }
     }
 

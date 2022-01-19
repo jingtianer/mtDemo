@@ -14,7 +14,7 @@ abstract class BaseActivity<T : BaseInterface.Presenter> : FragmentActivity(), B
     fun login() {
         if (!BaseApplication.sp.login) {
             val intent = Intent(this, LoginActivity::class.java)
-            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             startActivity(intent)
         }
     }
