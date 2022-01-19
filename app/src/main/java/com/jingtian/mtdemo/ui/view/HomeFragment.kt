@@ -26,83 +26,27 @@ import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.random.Random
 
-class HomeFragment: BaseFragment<BaseInterface.Presenter>() {
-    override fun getPresenter(): BaseInterface.Presenter {
-        return BasePresenter<HomeFragment>()
-    }
-    data class FunctionBean(val icon:Int, val title:String, val color:String)
 
-    class ViewHolder(view:View) :RecyclerView.ViewHolder(view) {
-        var itemNaviIcon:TextView = view.findViewById(R.id.item_navi_icon)
-        var itemNaviTitle:TextView = view.findViewById(R.id.item_navi_title)
-    }
-    private var callback:ViewFlipperTouchEvent? = null
+    private var callback: ViewFlipperTouchEvent? = null
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        getView()?.let {
+        view.let {
             val homeSearchBar = it.findViewById<LinearLayout>(R.id.home_search_bar)
             homeSearchBar.layoutParams =
                 (homeSearchBar.layoutParams as LinearLayout.LayoutParams).apply {
                     setMargins(leftMargin,getStatusBarHeight() + 45,rightMargin,bottomMargin)
                 }
             val tvSearchBar = it.findViewById<TextView>(R.id.tv_search_bar)
-            SetFont.setFont(tvSearchBar,it)
-            //vfMain.startFlipping()
-            val rcHomeFunction = it.findViewById<RecyclerView>(R.id.rc_home_function)
-            val spanCount = 2
-            rcHomeFunction.layoutManager = GridLayoutManager(context, spanCount).apply {
-                orientation = GridLayoutManager.HORIZONTAL
-            }
-            val arr = arrayListOf(
-                FunctionBean(R.string.daily,"日常", "#3333ff"),
-                FunctionBean(R.string.ticket,"电影票", "#cc9900"),
-                FunctionBean(R.string.show,"展览", "#33cccc"),
-                FunctionBean(R.string.star,"收藏", "#66ff66"),
-                FunctionBean(R.string.edit,"编辑", "#ff6699"),
-                FunctionBean(R.string.scan,"扫码", "#0099cc"),
-                FunctionBean(R.string.cart,"购物", "#cc99ff"),
-                FunctionBean(R.string.position,"位置", "#ff0000")
-            )
-            rcHomeFunction.adapter = object : RecyclerView.Adapter<ViewHolder>() {
-                override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-                    val mView: View =
-                        LayoutInflater.from(parent.context)
-                            .inflate(
-                                R.layout.item_navi,
-                                parent,
-                                false
-                            )
-//                view.setPadding(10,10,10,10)
-                    mView.layoutParams.width = (getScreenWidth(it)) / ceil(arr.size.toFloat() / spanCount).toInt()
-                    mView.layoutParams.height = (view.layoutParams.width)
-                    return ViewHolder(mView)
-                }
+            BaseApplication.utils.setFont(tvSearchBar)
 
-                override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-                    val item = arr[position]
-                    SetFont.setFont(holder.itemNaviIcon, holder.itemNaviTitle.context)
-                    holder.apply {
-                        itemNaviTitle.text = item.title
-                        itemNaviIcon.setText(item.icon)
-                        itemNaviIcon.textSize = 36f
-                        itemNaviIcon.setTextColor(Color.parseColor(item.color))
-                    }
-                }
-                override fun getItemCount(): Int = arr.size
-            }
-            val vfMain = it.findViewById<ViewFlipper>(R.id.vf_main)
-            for (img in imgRes) {
-                vfMain.addView(ImageView(it.context).apply {
-                    setImageBitmap(getImg(img))
-                })
-            }
-            vfMain.startFlipping()
-            val rvCommodity = it.findViewById<RecyclerView>(R.id.rv_commodity)
-            rvCommodity.apply {
-                RvCommodityAdapter.setWaterfallFlowStyle(this, 2, RvCommodityAdapter.VERTICAL)
-                adapter = RvCommodityAdapter(it.context)
-            }
+
         }
+
+        mPresenter?.requestFunctionData()
+        mPresenter?.requestImageData()
+        mPresenter?.requestCommodityData()
     }
 
     private fun getImg(img: Int): Bitmap? {
@@ -116,16 +60,9 @@ class HomeFragment: BaseFragment<BaseInterface.Presenter>() {
 
     }
 
-    private val imgRes = arrayListOf(
-        (R.mipmap.main_vf_1),
-        (R.mipmap.main_vf_2),
-        (R.mipmap.main_vf_3),
-        (R.mipmap.main_vf_4),
-        (R.mipmap.main_vf_5)
-    )
 
     override fun onStart() {
-        super.onStart()
+        //此时activity已经创建了
         if (activity != null) {
             val vfMain = view?.findViewById<ViewFlipper>(R.id.vf_main)
             vfMain?.let {
@@ -135,15 +72,15 @@ class HomeFragment: BaseFragment<BaseInterface.Presenter>() {
                 callback?.registerListener(gestureDetector)
             }
         }
+        super.onStart()
+        //此时fragment对用户可见
     }
 
         override fun getItemCount(): Int = commodityRes.size
     }
-    override fun onDestroy() {
-        super.onDestroy()
-        callback?.unRegisterListener()
-    }
-    class ViewFlipperTouchListener(private val vfMain:ViewFlipper, val context:Context?): GestureDetector.SimpleOnGestureListener() {
+
+    class ViewFlipperTouchListener(private val vfMain: ViewFlipper, val context: Context?) :
+        GestureDetector.SimpleOnGestureListener() {
         private val minMove = 200
         override fun onFling(
             e1: MotionEvent?,
@@ -171,5 +108,40 @@ class HomeFragment: BaseFragment<BaseInterface.Presenter>() {
     interface ViewFlipperTouchEvent {
         fun registerListener(listener:GestureDetector)
         fun unRegisterListener()
+    }
+
+    override fun getPresenter(): HomePresenter = HomePresenter()
+
+    override fun provideFunctionData(functionList: ArrayList<FunctionBean>) {
+        view?.let {
+            val rcHomeFunction = it.findViewById<RecyclerView>(R.id.rc_home_function)
+            val spanCount = 2
+            rcHomeFunction.layoutManager = GridLayoutManager(context, spanCount).apply {
+                orientation = GridLayoutManager.HORIZONTAL
+            }
+            rcHomeFunction.adapter = RcHomeFunctionAdapter(functionList, spanCount)
+        }
+    }
+
+    override fun provideImageData(imgRes: ArrayList<Int>) {
+        view?.let {
+            val vfMain = it.findViewById<ViewFlipper>(R.id.vf_main)
+            for (img in imgRes) {
+                vfMain.addView(ImageView(it.context).apply {
+                    setImageBitmap(getImg(img))
+                })
+            }
+            vfMain.startFlipping()
+        }
+    }
+
+    override fun provideCommodityData(commodities: ArrayList<Int>) {
+        view?.let {
+            val rvCommodity = it.findViewById<RecyclerView>(R.id.rv_commodity)
+            rvCommodity.apply {
+                RvCommodityAdapter.setWaterfallFlowStyle(this, 2, RvCommodityAdapter.VERTICAL)
+                adapter = RvCommodityAdapter(it.context, RvCommodityAdapter.res)
+            }
+        }
     }
 }

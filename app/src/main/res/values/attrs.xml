@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CartNumberPicker">
+        <attr name="non_negative" format="boolean" />
+        <!--        default:false
+                    true:仅非负数的数字选择器
+                    false:可正可负-->
+    </declare-styleable>
+</resources>

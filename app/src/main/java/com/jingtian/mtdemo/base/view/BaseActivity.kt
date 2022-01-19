@@ -10,10 +10,18 @@ import androidx.fragment.app.FragmentActivity
 import com.jingtian.mtdemo.base.interfaces.BaseInterface
 import com.jingtian.mtdemo.R
 
-abstract class BaseActivity<T:BaseInterface.Presenter>:FragmentActivity(), BaseInterface.View {
-    private var mPresenter:T? = null
-    abstract fun getPresenter():T
-    abstract fun getLayout():Int
+abstract class BaseActivity<T : BaseInterface.Presenter> : FragmentActivity(), BaseInterface.View {
+    fun login() {
+        if (!BaseApplication.sp.login) {
+            val intent = Intent(this, LoginActivity::class.java)
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            startActivity(intent)
+        }
+    }
+
+    private var mPresenter: T? = null
+    abstract fun getPresenter(): T
+    abstract fun getLayout(): Int
     override fun bind() {
         mPresenter = getPresenter()
         mPresenter?.bind(this)

@@ -21,9 +21,10 @@ import kotlin.math.min
 
 class VerifyCodeFragment(private val passwordFragment: PasswordFragment):BaseFragment<LoginInterface.Presenter>(), LoginInterface.View {
     companion object {
-        var verifyCodeFragment:VerifyCodeFragment? = null
-        fun getInstance(passwordFragment: PasswordFragment):VerifyCodeFragment {
-            if (verifyCodeFragment==null) {
+        var tempPhone: String = ""
+        var verifyCodeFragment: VerifyCodeFragment? = null
+        fun getInstance(passwordFragment: PasswordFragment, tempPhone: String): VerifyCodeFragment {
+            if (verifyCodeFragment == null) {
                 verifyCodeFragment = VerifyCodeFragment(passwordFragment)
             }
             VerifyCodeFragment.tempPhone = tempPhone
@@ -115,7 +116,7 @@ class VerifyCodeFragment(private val passwordFragment: PasswordFragment):BaseFra
             etRealText.addTextChangedListener(VerifyCodeWatcher(etRealText, codes))
             etRealText.setOnKeyListener(KeyListener(codes))
 
-            tvCurPhone.text = VerifyCodeFragment.tempPhone
+            tvCurPhone.text = tempPhone
             tvChangePhone.setOnClickListener {
                 activity?.supportFragmentManager?.beginTransaction()
                     ?.replace(R.id.login_frame, passwordFragment)?.commit()

@@ -1,8 +1,6 @@
 package com.jingtian.mtdemo.base
 
 import android.app.Application
-import android.content.Intent
-import com.jingtian.mtdemo.ui.view.LoginActivity
 import com.jingtian.mtdemo.utils.AnimationUtil
 import com.jingtian.mtdemo.utils.MyUtils
 import com.jingtian.mtdemo.utils.SP

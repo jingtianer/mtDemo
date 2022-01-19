@@ -1,14 +1,10 @@
 package com.jingtian.mtdemo.utils
 
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.graphics.Typeface
 import android.os.Build
 import android.util.Log
 import android.widget.TextView
-import com.jingtian.mtdemo.base.BaseApplication
-import com.jingtian.mtdemo.ui.view.LoginActivity
 import kotlin.math.abs
 import kotlin.random.Random
 
@@ -51,7 +47,6 @@ class MyUtils(val context: Context) {
     /**
      * 将dip或dp值转换成为px值，保证尺寸大小不变
      *
-     * @param context
      * @param dpValue
      * @return
      */
@@ -68,7 +63,7 @@ class MyUtils(val context: Context) {
         }
     }
 
-    fun getString(id:Int):String {
+    fun getString(id: Int): String {
         return context.resources.getString(id)
     }
 

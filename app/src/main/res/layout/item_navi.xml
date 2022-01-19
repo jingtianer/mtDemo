@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:orientation="vertical"
+    android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:gravity="center"
-    android:layout_height="wrap_content">
+    android:orientation="vertical">
+
     <TextView
+        android:id="@+id/item_navi_icon"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="4dp"
         android:gravity="center"
-        android:textSize="28sp"
-        android:layout_height="wrap_content"
-        android:id="@+id/item_navi_icon"/>
+        android:textSize="28sp" />
+
     <TextView
+        android:id="@+id/item_navi_title"
         android:layout_width="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
         android:layout_height="wrap_content"
-        android:id="@+id/item_navi_title"/>
+        android:layout_gravity="center"
+        android:gravity="center" />
 
 </LinearLayout>

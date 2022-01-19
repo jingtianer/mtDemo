@@ -51,5 +51,25 @@
     <string name="button_skip">跳过</string>
     <string name="home_search_hint">搜索</string>
 
+    <string name="add">&#xe6a2;</string>
+    <string name="minus">&#xe6c3;</string>
+    <string name="welcom_to_mt">欢迎登录美团</string>
+    <string name="_86">+86</string>
+    <string name="_splitter"><![CDATA[>]]></string>
+    <string name="phone_hint">手机号</string>
+    <string name="login_hint">未注册的手机号验证和将自动创建账户</string>
+    <string name="pwd_hint">密码</string>
+    <string name="bt_login_hint">登录</string>
+    <string name="contract_hint">我已阅读并同意啦啦啦啦啦啦啦啦，并授权mt使用哈哈哈哈哈哈哈哈哈哈哈哈哈，对喵喵喵喵喵喵喵喵喵喵喵统一管理</string>
+    <string name="bt_use_vc">使用验证码</string>
+    <string name="bt_help">遇到问题</string>
+    <string name="my_function">我的功能</string>
+    <string name="my_wallet">我的钱包</string>
+    <string name="my_asset">我的资产</string>
+    <string name="vip_hint">开通获得6张无门槛会员红包</string>
+    <string name="vip">美团会员</string>
+    <string name="vip_bt">立即开通</string>
+    <string name="default_username">我的用户名</string>
+    <string name="content_discreption_profile">头像</string>
 
 </resources>

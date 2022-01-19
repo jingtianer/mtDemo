@@ -15,7 +15,16 @@ abstract class BaseFragment<T:BaseInterface.Presenter>:BaseInterface.View, Fragm
     override fun bind() {
         mPresenter?.bind(this)
     }
-    fun getStatusBarHeight():Int {
+
+    fun login() {
+        if (!BaseApplication.sp.login) {
+            val intent = Intent(this.context, LoginActivity::class.java)
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            context?.startActivity(intent)
+        }
+    }
+
+    fun getStatusBarHeight(): Int {
         var statusBarHeight = -1
         //获取status_bar_height资源的ID
         val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")

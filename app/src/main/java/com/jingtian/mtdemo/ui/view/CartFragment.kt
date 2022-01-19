@@ -13,4 +13,138 @@ class CartFragment: BaseFragment<BaseInterface.Presenter>() {
     override fun getLayout(): Int {
         return R.layout.fragment_cart
     }
+
+    private var selectCount = 0
+    val selectedItem = mutableListOf<CartBean>()
+    private val listener1 = object : SelectionClickListener {
+        override fun click(view: TextView, selection: Boolean, bean: CartBean) {
+            if (selection) {
+                view.setText(R.string.unchecked)
+                selectCount--
+                selectedItem.remove(bean)
+            } else {
+                view.setText(R.string.checked)
+                if (!selectedItem.contains(bean)) {
+                    selectedItem.add(bean)
+                }
+                selectCount++
+            }
+            if (selectCount > 0) {
+                enableButton(tvLabelRight)
+            } else {
+                disableButton(tvLabelRight)
+            }
+        }
+
+    }
+    private val map = mutableMapOf<Int, Int>()
+    private val listener2 = object : NumberClickListener {
+        override fun click(view: CartNumberPicker, position: Int) {
+            map[position] = view.getNumber()
+        }
+    }
+
+
+    private fun disableButton(textView: TextView?) {
+        textView?.apply {
+            visibility = View.INVISIBLE
+            isClickable = false
+        }
+    }
+
+    private fun enableButton(textView: TextView?) {
+        textView?.apply {
+            visibility = View.VISIBLE
+            isClickable = true
+        }
+    }
+
+    private var tvLabelLeft: TextView? = null
+    private var tvLabelRight: TextView? = null
+    private fun getToolbar(view: View) = view.findViewById<LinearLayout>(R.id.ll_toolbar_root)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        view.let {
+            val llCartFirst = it.findViewById<LinearLayout>(R.id.ll_cart_first)
+            llCartFirst.apply {
+                setPadding(
+                    paddingLeft,
+                    paddingTop + getStatusBarHeight(),
+                    paddingRight,
+                    paddingBottom
+                )
+            }
+            //请求recyclerview的数据
+            mPresenter?.requestGuessData()
+            mPresenter?.requestCartData()
+            //初始化按钮与点击操作
+            initButtons(it)
+        }
+    }
+
+    interface SelectionClickListener {
+        fun click(view: TextView, selection: Boolean, bean: CartBean)
+    }
+
+    interface NumberClickListener {
+        fun click(view: CartNumberPicker, position: Int)
+    }
+
+
+    fun initButtons(it: View) {
+        val toolbar = getToolbar(it)
+        val tvTitle = toolbar.findViewById<TextView>(R.id.tv_label_title)
+        tvTitle.text = "购物车"
+        tvLabelLeft = toolbar.findViewById(R.id.tv_label_left)
+        tvLabelRight = toolbar.findViewById(R.id.tv_label_right)
+        val rvCart = it.findViewById<RecyclerView>(R.id.rv_cart_cart)
+        tvLabelLeft?.apply {
+            text = "清空"
+            setOnClickListener {
+                val adapter = rvCart.adapter as CartAdapter
+                while (adapter.data.size > 0) {
+                    adapter.removeAt(0)
+                }
+            }
+            disableButton(tvLabelRight)
+            selectCount = 0
+        }
+        tvLabelRight?.apply {
+            text = "删除"
+            setOnClickListener {
+                val adapter = rvCart.adapter as CartAdapter
+                for (item in selectedItem) {
+                    adapter.removeAt(adapter.data.indexOf(item))
+                }
+                selectedItem.clear()
+                selectCount = 0
+                disableButton(tvLabelRight)
+            }
+        }
+        disableButton(tvLabelRight)
+        enableButton(tvLabelLeft)
+    }
+
+
+    override fun getPresenter(): CartPresenter = CartPresenter()
+    override fun provideCartData(cartData: ArrayList<CartBean>) {
+        view?.let {
+            val rvCart = it.findViewById<RecyclerView>(R.id.rv_cart_cart)
+            rvCart.apply {
+                layoutManager = LinearLayoutManager(context).apply {
+                    orientation = LinearLayoutManager.VERTICAL
+                }
+                adapter = CartAdapter(requireActivity(), cartData, listener1, listener2)
+            }
+        }
+    }
+
+    override fun provideGuessData(commodityRes: ArrayList<Int>) {
+        view?.let {
+            val rvCartGuess = it.findViewById<RecyclerView>(R.id.rv_cart_guess)
+            RvCommodityAdapter.setWaterfallFlowStyle(rvCartGuess, 2, RvCommodityAdapter.VERTICAL)
+            rvCartGuess.adapter = RvCommodityAdapter(requireActivity(), commodityRes)
+        }
+    }
+
 }

@@ -157,16 +157,16 @@ class PasswordFragment:BaseFragment<LoginPresenter>(), LoginInterface.View {
                     val pwd = etPwd.text.toString()
                     mPresenter?.loginByPd(phone, pwd)
                 } else {
-                    verifyCodeFragment = VerifyCodeFragment.getInstance(this,phoneTemp)
+                    verifyCodeFragment = VerifyCodeFragment.getInstance(this, phoneTemp)
                     verifyCodeFragment?.let {
                         activity?.supportFragmentManager?.beginTransaction()
                             ?.replace(R.id.login_frame, it)?.commit()
                     }
-    //                activity?.let {
-    //                    it.supportFragmentManager.beginTransaction()
-    //                    .replace(R.id.login_frame, verifyCodeFragment!!)
-    //                    .commit()
-    //                }
+                    //                activity?.let {
+                    //                    it.supportFragmentManager.beginTransaction()
+                    //                    .replace(R.id.login_frame, verifyCodeFragment!!)
+                    //                    .commit()
+                    //                }
 
                 }
             }
