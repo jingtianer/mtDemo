@@ -161,7 +161,7 @@ class CartFragment: BaseFragment<BaseInterface.Presenter>() {
     }
 
     interface NumberClickListener {
-        fun click(view: CartNumberPicker, position: Int)
+        fun click(view: CartNumberPicker, id: Int)
     }
 
 
@@ -233,6 +233,7 @@ class CartFragment: BaseFragment<BaseInterface.Presenter>() {
 
     override fun onResume() {
         super.onResume()
-        bottomBarExitDown(300)
+        if (selectCount == 0)
+            bottomBarExitDown(300)
     }
 }
