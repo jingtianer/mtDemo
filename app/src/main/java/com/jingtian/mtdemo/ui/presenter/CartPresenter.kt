@@ -1,8 +1,6 @@
 package com.jingtian.mtdemo.ui.presenter
 
 import android.util.Log
-import com.jingtian.mtdemo.R
-import com.jingtian.mtdemo.base.BaseApplication
 import com.jingtian.mtdemo.base.presenter.BasePresenter
 import com.jingtian.mtdemo.bean.CartBean
 import com.jingtian.mtdemo.bean.SortBean
@@ -12,7 +10,7 @@ import com.jingtian.mtdemo.ui.interfaces.CartInterface
 import java.util.concurrent.ConcurrentLinkedDeque
 
 class CartPresenter : BasePresenter<CartInterface.View>(), CartInterface.Presenter {
-//    private val data = arrayListOf(
+    //    private val data = arrayListOf(
 //        CartBean(
 //            R.mipmap.commodities1,
 //            BaseApplication.utils.getPrice(),
@@ -65,8 +63,8 @@ class CartPresenter : BasePresenter<CartInterface.View>(), CartInterface.Present
 //        )
 //    )
     companion object {
-        private val  cartBuffer = ConcurrentLinkedDeque<CartBean>()
-        fun add2Cart(sortBean: SortBean): Boolean{
+        private val cartBuffer = ConcurrentLinkedDeque<CartBean>()
+        fun add2Cart(sortBean: SortBean): Boolean {
             Log.d("add:", "$sortBean")
             SortBean2CartBuilder().setSortBean(sortBean).build()?.let {
                 cartBuffer.add(it)
@@ -75,6 +73,7 @@ class CartPresenter : BasePresenter<CartInterface.View>(), CartInterface.Present
             return false
         }
     }
+
     val data = arrayListOf<CartBean>()
     override fun requestCartData() {
         mView?.provideCartData(data)

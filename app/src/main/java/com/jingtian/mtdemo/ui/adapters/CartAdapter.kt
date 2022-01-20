@@ -30,11 +30,13 @@ class CartAdapter(
         data.removeAt(position)
         notifyItemRemoved(position)
     }
-    fun add(item:CartBean) {
+
+    fun add(item: CartBean) {
         Log.d("add", "success")
         data.add(item)
-        notifyItemInserted(data.size-1)
+        notifyItemInserted(data.size - 1)
     }
+
     fun selectAll() {
         for (i in 0 until data.size) {
             if (!data[i].selection)
@@ -56,7 +58,8 @@ class CartAdapter(
         val tvItemName: TextView = view.findViewById(R.id.tv_cart_commodity)
         val tvPrice: TextView = view.findViewById(R.id.tv_cart_price)
         val cartNumberPicker: CartNumberPicker = view.findViewById(R.id.cnp_number_picker)
-        val clCartItemRoot: ConstraintLayout = view.findViewById<ConstraintLayout>(R.id.cl_cart_item_root)
+        val clCartItemRoot: ConstraintLayout =
+            view.findViewById<ConstraintLayout>(R.id.cl_cart_item_root)
 
     }
 

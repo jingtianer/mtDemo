@@ -65,8 +65,8 @@
             android:layout_gravity="end|bottom"
             android:layout_weight="1"
             android:gravity="end|bottom"
-            android:textSize="36sp"
             android:textColor="@color/orange"
+            android:textSize="36sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>

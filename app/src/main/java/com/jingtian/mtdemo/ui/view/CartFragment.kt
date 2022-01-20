@@ -82,7 +82,7 @@ class CartFragment : BaseFragment<CartPresenter>(), CartInterface.View {
         if (isBottomBarShown) return
         bottomBar?.apply {
 //            startAnimation(BaseApplication.anims.showUpAnimation())
-            BaseApplication.anims.showUpAnimation(this,height).start()
+            BaseApplication.anims.showUpAnimation(this, height).start()
         }
         isBottomBarShown = true
     }
@@ -92,7 +92,7 @@ class CartFragment : BaseFragment<CartPresenter>(), CartInterface.View {
 //            startAnimation(BaseApplication.anims.exitAnimation().apply {
 //                startOffset = delay
 //            })
-            BaseApplication.anims.exitAnimation(this,height).apply {
+            BaseApplication.anims.exitAnimation(this, height).apply {
                 startDelay = delay
                 start()
             }
@@ -226,7 +226,7 @@ class CartFragment : BaseFragment<CartPresenter>(), CartInterface.View {
     var mCartAdapter: CartAdapter? = null
     override fun getPresenter(): CartPresenter = CartPresenter()
     override fun provideCartData(cartData: ArrayList<CartBean>) {
-        mCartAdapter?.let{
+        mCartAdapter?.let {
             for (item in cartData) {
                 it.add(item)
             }

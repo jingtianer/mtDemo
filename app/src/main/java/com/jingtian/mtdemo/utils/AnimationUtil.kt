@@ -13,12 +13,12 @@ class AnimationUtil(val context: Context) {
     }
 
     @SuppressLint("ObjectAnimatorBinding")
-    fun showUpAnimation(target:Any, offset:Int): ObjectAnimator {
-        return ObjectAnimator.ofFloat(target, "translationY", offset.toFloat(),0f)
+    fun showUpAnimation(target: Any, offset: Int): ObjectAnimator {
+        return ObjectAnimator.ofFloat(target, "translationY", offset.toFloat(), 0f)
     }
 
     @SuppressLint("ObjectAnimatorBinding")
-    fun exitAnimation(target:Any, offset:Int): ObjectAnimator {
+    fun exitAnimation(target: Any, offset: Int): ObjectAnimator {
         return ObjectAnimator.ofFloat(target, "translationY", 0f, offset.toFloat())
     }
 }

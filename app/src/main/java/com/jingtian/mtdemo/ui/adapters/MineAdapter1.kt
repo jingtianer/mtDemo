@@ -1,6 +1,5 @@
 package com.jingtian.mtdemo.ui.adapters
 
-import android.content.Context
 import android.text.SpannableString
 import android.text.style.AbsoluteSizeSpan
 import android.text.style.ForegroundColorSpan

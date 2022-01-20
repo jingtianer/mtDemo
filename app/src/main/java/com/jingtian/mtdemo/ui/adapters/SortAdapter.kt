@@ -15,10 +15,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.jingtian.mtdemo.R
 import com.jingtian.mtdemo.base.BaseApplication
-import com.jingtian.mtdemo.bean.CartBean
 import com.jingtian.mtdemo.bean.SortBean
-import com.jingtian.mtdemo.ui.view.CartFragment
-import com.jingtian.mtdemo.ui.view.CartNumberPicker
 import com.jingtian.mtdemo.ui.view.SortFragment
 
 class SortAdapter(
@@ -30,7 +27,7 @@ class SortAdapter(
         val tvItemName: TextView = view.findViewById(R.id.tv_sort_commodity)
         val tvPrice: TextView = view.findViewById(R.id.tv_sort_price)
         val clCartItemRoot: ConstraintLayout = view.findViewById(R.id.cl_sort_item_root)
-        val tvSortAdd2cart:TextView = view.findViewById(R.id.tv_sort_add2cart)
+        val tvSortAdd2cart: TextView = view.findViewById(R.id.tv_sort_add2cart)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
