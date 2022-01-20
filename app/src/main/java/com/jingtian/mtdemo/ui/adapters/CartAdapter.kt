@@ -6,7 +6,6 @@ import android.text.SpannableString
 import android.text.style.AbsoluteSizeSpan
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,18 +20,30 @@ import com.jingtian.mtdemo.ui.view.CartFragment
 import com.jingtian.mtdemo.ui.view.CartNumberPicker
 
 class CartAdapter(
-    val data: ArrayList<CartBean>,
+    private val data: ArrayList<CartBean>,
     private val listener1: CartFragment.SelectionClickListener,
     private val listener2: CartFragment.NumberClickListener
 ) :
     RecyclerView.Adapter<CartAdapter.ViewHolder>() {
+    fun indexOf(cartBean: CartBean): Int {
+        return data.indexOf(cartBean)
+    }
+
     fun removeAt(position: Int) {
         data.removeAt(position)
         notifyItemRemoved(position)
     }
 
     fun add(item: CartBean) {
-        Log.d("add", "success")
+//        val i = data.find {
+//            it.pic == item.pic
+//        }
+//        if (i != null) {
+//            Log.d("add", "find same")
+//            i.n++
+//        } else {
+//            data.add(item)
+//        }
         data.add(item)
         notifyItemInserted(data.size - 1)
     }
@@ -59,7 +70,7 @@ class CartAdapter(
         val tvPrice: TextView = view.findViewById(R.id.tv_cart_price)
         val cartNumberPicker: CartNumberPicker = view.findViewById(R.id.cnp_number_picker)
         val clCartItemRoot: ConstraintLayout =
-            view.findViewById<ConstraintLayout>(R.id.cl_cart_item_root)
+            view.findViewById(R.id.cl_cart_item_root)
 
     }
 
@@ -108,10 +119,12 @@ class CartAdapter(
                 listener1.click(tvCartIcon, item.selection, item)
                 item.selection = !item.selection
             }
+            cartNumberPicker.setNumber(item.n)
             cartNumberPicker.addClickListener(
                 object : CartNumberPicker.OnClickListener {
                     override fun click(isLeft: Boolean) {
-                        listener2.click(cartNumberPicker, item.pic)
+                        item.n = cartNumberPicker.getNumber()
+                        listener2.click()
                     }
                 }
             )

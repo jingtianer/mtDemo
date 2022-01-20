@@ -64,9 +64,23 @@ class CartPresenter : BasePresenter<CartInterface.View>(), CartInterface.Present
 //    )
     companion object {
         private val cartBuffer = ConcurrentLinkedDeque<CartBean>()
+        val data = arrayListOf<CartBean>()
         fun add2Cart(sortBean: SortBean): Boolean {
             Log.d("add:", "$sortBean")
+            var f = cartBuffer.find {
+                it.pic == sortBean.pic
+            }
+            if (f == null) {
+                f = data.find {
+                    it.pic == sortBean.pic
+                }
+            }
+            f?.let {
+                f.n++
+                return true
+            }
             SortBean2CartBuilder().setSortBean(sortBean).build()?.let {
+                it.n++
                 cartBuffer.add(it)
                 return true
             }
@@ -74,7 +88,7 @@ class CartPresenter : BasePresenter<CartInterface.View>(), CartInterface.Present
         }
     }
 
-    val data = arrayListOf<CartBean>()
+
     override fun requestCartData() {
         mView?.provideCartData(data)
     }

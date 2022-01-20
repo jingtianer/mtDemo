@@ -68,10 +68,8 @@ class CartFragment : BaseFragment<CartPresenter>(), CartInterface.View {
     fun updateTotal() {
         var totalPrice = 0f
         for (item in selectedItem) {
-            if (map.containsKey(item.pic)) {
-                totalPrice += item.price * map[item.pic]!!
-                Log.d("价格", "$totalPrice")
-            }
+            totalPrice += item.price * item.n
+            Log.d("价格", "$totalPrice")
         }
         cartTotal?.text = "$totalPrice"
 
@@ -102,9 +100,7 @@ class CartFragment : BaseFragment<CartPresenter>(), CartInterface.View {
 
     private val map = mutableMapOf<Int, Int>()
     private val listener2 = object : NumberClickListener {
-        override fun click(view: CartNumberPicker, id: Int) {
-            map[id] = view.getNumber()
-            Log.d("total", "${map[id]}")
+        override fun click() {
             updateTotal()
         }
     }
@@ -176,7 +172,7 @@ class CartFragment : BaseFragment<CartPresenter>(), CartInterface.View {
     }
 
     interface NumberClickListener {
-        fun click(view: CartNumberPicker, id: Int)
+        fun click()
     }
 
 
@@ -191,7 +187,7 @@ class CartFragment : BaseFragment<CartPresenter>(), CartInterface.View {
             text = "清空"
             setOnClickListener {
                 val adapter = rvCart.adapter as CartAdapter
-                while (adapter.data.size > 0) {
+                while (adapter.itemCount > 0) {
                     adapter.removeAt(0)
                 }
                 selectedItem.clear()
@@ -209,7 +205,7 @@ class CartFragment : BaseFragment<CartPresenter>(), CartInterface.View {
             setOnClickListener {
                 val adapter = rvCart.adapter as CartAdapter
                 for (item in selectedItem) {
-                    adapter.removeAt(adapter.data.indexOf(item))
+                    adapter.removeAt(adapter.indexOf(item))
                 }
                 selectedItem.clear()
                 map.clear()

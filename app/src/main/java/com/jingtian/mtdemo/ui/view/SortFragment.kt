@@ -116,7 +116,6 @@ class SortFragment : BaseFragment<SortPresenter>(), SortInterface.View {
                 override fun click(sortBean: SortBean) {
                     mPresenter?.add2Cart(sortBean)
                 }
-
             })
             rv.layoutManager = LinearLayoutManager(context)
             rv.layoutParams = RecyclerView.LayoutParams(
@@ -128,7 +127,7 @@ class SortFragment : BaseFragment<SortPresenter>(), SortInterface.View {
     }
 
     override fun add2CartSuccess() {
-        Toast.makeText(context, "成功添加到购物车", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(context, "成功添加到购物车", Toast.LENGTH_SHORT).show()
     }
 
     override fun add2CartFail() {

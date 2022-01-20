@@ -8,15 +8,21 @@ data class CartBean(
     var selection: Boolean
 ) {
     var checkBox: ConstraintLayout? = null
+    var n: Int = 0
 }
 
 class SortBean2CartBuilder {
     private var sortBean: SortBean? = null
     private var pic: Int? = null
     private var price: Float? = null
+    private var n: Int? = null
     fun setSortBean(sortBean: SortBean): SortBean2CartBuilder {
         this.sortBean = sortBean
         return this
+    }
+
+    fun setN(n: Int) {
+        this.n = n
     }
 
     fun setPic(pic: Int): SortBean2CartBuilder {
@@ -30,10 +36,14 @@ class SortBean2CartBuilder {
     }
 
     fun build(): CartBean? {
-        return when {
+        return (when {
             sortBean != null -> CartBean(sortBean!!.pic, sortBean!!.price, false)
             (pic != null) and (price != null) -> CartBean(pic!!, price!!, false)
             else -> null
+        })?.apply {
+            this@SortBean2CartBuilder.n?.let {
+                this.n = it
+            }
         }
     }
 
