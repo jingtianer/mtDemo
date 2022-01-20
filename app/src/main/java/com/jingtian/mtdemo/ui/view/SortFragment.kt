@@ -127,7 +127,7 @@ class SortFragment : BaseFragment<SortPresenter>(), SortInterface.View {
     }
 
     override fun add2CartSuccess() {
-        //Toast.makeText(context, "成功添加到购物车", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "成功添加到购物车", Toast.LENGTH_SHORT).show()
     }
 
     override fun add2CartFail() {
