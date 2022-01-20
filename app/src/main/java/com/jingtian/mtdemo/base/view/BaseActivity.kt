@@ -7,8 +7,10 @@ import android.os.Bundle
 import android.view.View
 import android.widget.LinearLayout
 import androidx.fragment.app.FragmentActivity
-import com.jingtian.mtdemo.base.interfaces.BaseInterface
 import com.jingtian.mtdemo.R
+import com.jingtian.mtdemo.base.BaseApplication
+import com.jingtian.mtdemo.base.interfaces.BaseInterface
+import com.jingtian.mtdemo.ui.view.LoginActivity
 
 abstract class BaseActivity<T : BaseInterface.Presenter> : FragmentActivity(), BaseInterface.View {
     fun login() {
@@ -27,7 +29,7 @@ abstract class BaseActivity<T : BaseInterface.Presenter> : FragmentActivity(), B
         mPresenter?.bind(this)
     }
 
-    fun setTransparentBars(){
+    fun setTransparentBars() {
         window.statusBarColor = Color.TRANSPARENT
         window.navigationBarColor = Color.TRANSPARENT
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -35,7 +37,8 @@ abstract class BaseActivity<T : BaseInterface.Presenter> : FragmentActivity(), B
                 View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         }
     }
-    private fun getStatusBarHeight():Int {
+
+    private fun getStatusBarHeight(): Int {
         var statusBarHeight = -1
         //获取status_bar_height资源的ID
         val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
@@ -45,12 +48,15 @@ abstract class BaseActivity<T : BaseInterface.Presenter> : FragmentActivity(), B
         }
         return statusBarHeight
     }
+
     fun noBars() {
         val statusBar = findViewById<LinearLayout>(R.id.status_bar)
-        val layoutParams: LinearLayout.LayoutParams = statusBar!!.layoutParams as LinearLayout.LayoutParams
-        layoutParams.setMargins(0,getStatusBarHeight(),0,0)
+        val layoutParams: LinearLayout.LayoutParams =
+            statusBar!!.layoutParams as LinearLayout.LayoutParams
+        layoutParams.setMargins(0, getStatusBarHeight(), 0, 0)
         statusBar.layoutParams = layoutParams
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bind()

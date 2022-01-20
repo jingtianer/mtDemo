@@ -19,7 +19,7 @@ import com.jingtian.mtdemo.ui.interfaces.MainInterface
 import com.jingtian.mtdemo.ui.presenter.MainPresenter
 
 
-class MainActivity: BaseActivity<MainInterface.Presenter>(), MainInterface.View {
+class MainActivity : BaseActivity<MainInterface.Presenter>(), MainInterface.View {
     override fun getPresenter(): MainInterface.Presenter {
         return MainPresenter()
     }
@@ -32,8 +32,9 @@ class MainActivity: BaseActivity<MainInterface.Presenter>(), MainInterface.View 
         pfListener?.onTouchEvent(event)
         return super.onTouchEvent(event)
     }
-    fun getCallback():HomeFragment.ViewFlipperTouchEvent{
-        return object :HomeFragment.ViewFlipperTouchEvent {
+
+    fun getCallback(): HomeFragment.ViewFlipperTouchEvent {
+        return object : HomeFragment.ViewFlipperTouchEvent {
             override fun registerListener(listener: GestureDetector) {
                 pfListener = listener
             }
@@ -61,37 +62,63 @@ class MainActivity: BaseActivity<MainInterface.Presenter>(), MainInterface.View 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTransparentBars()
-        val rcBtmNavi = findViewById<RecyclerView>(R.id.rc_btm_navi)
-        rcBtmNavi.layoutManager = GridLayoutManager(this,1).apply {
-            orientation = GridLayoutManager.HORIZONTAL
+
+        viewPagerMain = findViewById<ViewPager2>(R.id.fl_main)
+        viewPagerMain?.apply {
+            adapter = MainViewPagerAdapter(supportFragmentManager, lifecycle, naviArr)
+            registerOnPageChangeCallback(pagerCallback)
+            offscreenPageLimit = naviArr.size - 1
+            //建议设置为n-1
         }
-        rcBtmNavi.adapter = NaviAdapter(naviArr, this, object :NaviItemClick {
-            override fun click(position: Int) {
-                viewPagerMain.setCurrentItem(position, true)
-                if (naviArr[position].id == R.layout.fragment_mine) {
-                    login()
-                }
+
+        rcBtmNavi = findViewById<RecyclerView>(R.id.rc_btm_navi)
+        rcBtmNavi?.apply {
+            layoutManager = GridLayoutManager(this@MainActivity, 1).apply {
+                orientation = GridLayoutManager.HORIZONTAL
             }
-        })
+            adapter = NaviAdapter(naviArr, this@MainActivity, object : NaviItemClick {
+                override fun click(position: Int) {
+                    viewPagerMain?.setCurrentItem(position, true)
+//                    if (naviArr[position].id == R.layout.fragment_mine) {
+//                        login()
+//                    }
+                }
+            })
+        }
+
     }
-    data class NaviBean(val icon:Int, val title:String) {
-        var mHolder:NaviAdapter.ViewHolder?=null
-    }
+
+
     private val naviArr = arrayListOf(
         NaviBean(R.string.home, "首页", R.layout.fragment_home),
         NaviBean(R.string.sort, "分类", R.layout.fragment_sort),
         NaviBean(R.string.cart, "购物车", R.layout.fragment_cart),
         NaviBean(R.string.mine, "我的", R.layout.fragment_mine)
     )
+
     interface NaviItemClick {
-        fun click(position:Int)
+        fun click(position: Int)
     }
-    class NaviAdapter(private val naviArr:ArrayList<NaviBean>, private val activity: FragmentActivity, private val perform_click:NaviItemClick)
-        :RecyclerView.Adapter<NaviAdapter.ViewHolder>(){
-        class ViewHolder(val view:View) : RecyclerView.ViewHolder(view) {
-            var itemNaviIcon:TextView = view.findViewById(R.id.item_navi_icon)
-            var itemNaviTitle:TextView = view.findViewById(R.id.item_navi_title)
-            fun onTouch(b:Boolean) {
+
+    class NaviAdapter(
+        private val naviArr: ArrayList<NaviBean>,
+        private val activity: FragmentActivity,
+        private val perform_click: NaviItemClick
+    ) : RecyclerView.Adapter<NaviAdapter.ViewHolder>() {
+        fun getLayoutId(position: Int): Int {
+            return naviArr[position].id
+        }
+
+        fun changeSelectedItem(position: Int) {
+            for (i in 0 until naviArr.size) {
+                naviArr[i].mHolder?.onTouch(i == position)
+            }
+        }
+
+        class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+            var itemNaviIcon: TextView = view.findViewById(R.id.item_navi_icon)
+            var itemNaviTitle: TextView = view.findViewById(R.id.item_navi_title)
+            fun onTouch(b: Boolean) {
                 if (b) {
                     itemNaviIcon.setTextColor(ContextCompat.getColor(view.context, R.color.orange))
                     itemNaviTitle.setTextColor(ContextCompat.getColor(view.context, R.color.orange))
@@ -101,6 +128,7 @@ class MainActivity: BaseActivity<MainInterface.Presenter>(), MainInterface.View 
                 }
             }
         }
+
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             val view: View =
                 LayoutInflater.from(parent.context)
@@ -140,8 +168,9 @@ class MainActivity: BaseActivity<MainInterface.Presenter>(), MainInterface.View 
             perform_click.click(position)
             //通知activity点击事件
         }
+
         override fun getItemCount(): Int = naviArr.size
-        private fun getScreenWidth(context: Activity): Int{
+        private fun getScreenWidth(context: Activity): Int {
             return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 context.windowManager.currentWindowMetrics.bounds.width()
             } else {

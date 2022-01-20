@@ -6,7 +6,7 @@ import com.jingtian.mtdemo.utils.MyUtils
 import com.jingtian.mtdemo.utils.SP
 import kotlin.properties.Delegates
 
-class BaseApplication: Application() {
+class BaseApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         sp = SP(this)

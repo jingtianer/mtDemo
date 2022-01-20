@@ -1,6 +1,5 @@
 package com.jingtian.mtdemo.net
 
-import com.jingtian.mtdemo.BuildConfig
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -13,14 +12,11 @@ class NetConstants {
         const val LOGIN_BY_VC_FAIL = 602
         const val LOGIN_BY_PD_FAIL = 601
         private const val baseUrl = "http://49.232.223.216:8088/mt_server/"
-        private val mInterface:NetInterface
+        private val mInterface: NetInterface
 
         init {
             val interceptor = HttpLoggingInterceptor().apply {
-                if (BuildConfig.DEBUG)
-                    setLevel(HttpLoggingInterceptor.Level.BODY)
-                else
-                    setLevel(HttpLoggingInterceptor.Level.NONE)
+                setLevel(HttpLoggingInterceptor.Level.BODY)
             }
             val client = OkHttpClient.Builder()
                 .addInterceptor(interceptor)
@@ -34,8 +30,9 @@ class NetConstants {
                 .build()
             mInterface = retrofit.create(NetInterface::class.java)
         }
-        fun getInterface() :NetInterface {
-            return  mInterface
+
+        fun getInterface(): NetInterface {
+            return mInterface
         }
 
     }

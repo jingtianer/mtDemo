@@ -4,8 +4,9 @@ interface BaseInterface {
     interface View {
         fun bind()
     }
+
     interface Presenter {
-        fun bind(view:View)
+        fun bind(view: View)
         fun unbind()
     }
 }

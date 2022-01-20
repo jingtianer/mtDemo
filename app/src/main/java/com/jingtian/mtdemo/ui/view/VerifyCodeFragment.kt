@@ -10,16 +10,16 @@ import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import com.jingtian.mtdemo.R
 import com.jingtian.mtdemo.base.BaseApplication
 import com.jingtian.mtdemo.base.view.BaseFragment
-import com.jingtian.mtdemo.R
 import com.jingtian.mtdemo.ui.interfaces.LoginInterface
 import com.jingtian.mtdemo.ui.presenter.LoginPresenter
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.math.min
 
-class VerifyCodeFragment(private val passwordFragment: PasswordFragment):BaseFragment<LoginInterface.Presenter>(), LoginInterface.View {
+class VerifyCodeFragment(private val passwordFragment: PasswordFragment) :
+    BaseFragment<LoginInterface.Presenter>(), LoginInterface.View {
     companion object {
         var tempPhone: String = ""
         var verifyCodeFragment: VerifyCodeFragment? = null
@@ -34,32 +34,43 @@ class VerifyCodeFragment(private val passwordFragment: PasswordFragment):BaseFra
 
     private val codes = arrayListOf<TextView>()
     private var count = 10
-    private var timer:Timer? = null
-    inner class CountTask(private val activity: Activity?, private val timer: Timer, val textView: TextView): TimerTask() {
+    private var timer: Timer? = null
+
+    inner class CountTask(
+        private val activity: Activity?,
+        private val timer: Timer,
+        val textView: TextView
+    ) : TimerTask() {
         override fun run() {
             activity?.runOnUiThread {
                 if (count > 0) {
                     count--
-                    textView.text = activity.resources.getString(R.string.tvDelay,count)
-                }else {
+                    textView.text = activity.resources.getString(R.string.tvDelay, count)
+                } else {
                     timer.cancel()
                     textView.text = "再次发送"
                 }
             }
         }
     }
+
     private fun startCount(textView: TextView) {
         timer?.cancel()
         count = 10
         timer = Timer()
-        timer!!.scheduleAtFixedRate(CountTask(activity, timer!!,textView), 0 ,1000)
+        timer!!.scheduleAtFixedRate(CountTask(activity, timer!!, textView), 0, 1000)
     }
-    var cur=""
-    inner class VerifyCodeWatcher(private val editText: EditText, private val list: ArrayList<TextView>):TextWatcher {
+
+    var cur = ""
+
+    inner class VerifyCodeWatcher(
+        private val editText: EditText,
+        private val list: ArrayList<TextView>
+    ) : TextWatcher {
 
         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
         override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            if(p0 == null || p0.isEmpty()) return
+            if (p0 == null || p0.isEmpty()) return
             val text = p0.toString() + ""
             if (text.isNotEmpty()) {
                 cur += text
@@ -72,6 +83,7 @@ class VerifyCodeFragment(private val passwordFragment: PasswordFragment):BaseFra
                 mPresenter?.loginByVc(BaseApplication.sp.phone, cur)
             }
         }
+
         override fun afterTextChanged(p0: Editable?) {}
         private fun update() {
             var i = 0
@@ -83,7 +95,8 @@ class VerifyCodeFragment(private val passwordFragment: PasswordFragment):BaseFra
         }
 
     }
-    inner class KeyListener(private val list: ArrayList<TextView>):View.OnKeyListener {
+
+    inner class KeyListener(private val list: ArrayList<TextView>) : View.OnKeyListener {
         override fun onKey(p0: View?, p1: Int, p2: KeyEvent?): Boolean {
             if ((p1 == KeyEvent.KEYCODE_DEL) && (p2!!.action == KeyEvent.ACTION_DOWN)) {
                 val i = cur.length - 1
@@ -96,6 +109,7 @@ class VerifyCodeFragment(private val passwordFragment: PasswordFragment):BaseFra
         }
 
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         super.onViewCreated(view, savedInstanceState)
@@ -137,6 +151,7 @@ class VerifyCodeFragment(private val passwordFragment: PasswordFragment):BaseFra
         super.onDestroy()
         verifyCodeFragment = null
     }
+
     override fun getPresenter(): LoginInterface.Presenter {
         return LoginPresenter()
     }

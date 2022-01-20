@@ -10,8 +10,8 @@ import com.jingtian.mtdemo.base.BaseApplication
 import com.jingtian.mtdemo.base.interfaces.BaseInterface
 import com.jingtian.mtdemo.ui.view.LoginActivity
 
-abstract class BaseFragment<T:BaseInterface.Presenter>:BaseInterface.View, Fragment() {
-    var mPresenter:T? = null
+abstract class BaseFragment<T : BaseInterface.Presenter> : BaseInterface.View, Fragment() {
+    var mPresenter: T? = null
     override fun bind() {
         mPresenter?.bind(this)
     }
@@ -34,8 +34,9 @@ abstract class BaseFragment<T:BaseInterface.Presenter>:BaseInterface.View, Fragm
         }
         return statusBarHeight
     }
-    abstract fun getPresenter():T
-    abstract fun getLayout():Int
+
+    abstract fun getPresenter(): T
+    abstract fun getLayout(): Int
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mPresenter = getPresenter()

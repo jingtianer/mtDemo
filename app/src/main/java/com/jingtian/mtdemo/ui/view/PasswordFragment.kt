@@ -9,16 +9,14 @@ import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.*
+import com.jingtian.mtdemo.R
 import com.jingtian.mtdemo.base.BaseApplication
 import com.jingtian.mtdemo.base.view.BaseFragment
-import com.jingtian.mtdemo.R
 import com.jingtian.mtdemo.ui.interfaces.LoginInterface
 import com.jingtian.mtdemo.ui.presenter.LoginPresenter
 
 
-
-
-class PasswordFragment:BaseFragment<LoginPresenter>(), LoginInterface.View {
+class PasswordFragment : BaseFragment<LoginPresenter>(), LoginInterface.View {
     override fun getPresenter(): LoginPresenter {
         return LoginPresenter()
     }
@@ -174,7 +172,8 @@ class PasswordFragment:BaseFragment<LoginPresenter>(), LoginInterface.View {
 
 
     }
-    private var verifyCodeFragment:VerifyCodeFragment? = null
+
+    private var verifyCodeFragment: VerifyCodeFragment? = null
     override fun getLayout(): Int {
         return R.layout.fragment_password
     }

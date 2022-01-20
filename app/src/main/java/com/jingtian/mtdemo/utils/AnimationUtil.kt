@@ -1,7 +1,10 @@
 package com.jingtian.mtdemo.utils
 
+import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.content.Context
-import android.view.animation.*
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import com.jingtian.mtdemo.R
 
 class AnimationUtil(val context: Context) {

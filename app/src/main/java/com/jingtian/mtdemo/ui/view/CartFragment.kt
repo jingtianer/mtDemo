@@ -1,14 +1,24 @@
 package com.jingtian.mtdemo.ui.view
 
-import com.jingtian.mtdemo.base.interfaces.BaseInterface
-import com.jingtian.mtdemo.base.presenter.BasePresenter
-import com.jingtian.mtdemo.base.view.BaseFragment
+import android.os.Bundle
+import android.util.Log
+import android.view.View
+import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.jingtian.mtdemo.R
+import com.jingtian.mtdemo.base.BaseApplication
+import com.jingtian.mtdemo.base.view.BaseFragment
+import com.jingtian.mtdemo.bean.CartBean
+import com.jingtian.mtdemo.ui.adapters.CartAdapter
+import com.jingtian.mtdemo.ui.adapters.RvCommodityAdapter
+import com.jingtian.mtdemo.ui.interfaces.CartInterface
+import com.jingtian.mtdemo.ui.presenter.CartPresenter
 
-class CartFragment: BaseFragment<BaseInterface.Presenter>() {
-    override fun getPresenter(): BaseInterface.Presenter {
-        return BasePresenter<HomeFragment>()
-    }
+
+class CartFragment : BaseFragment<CartPresenter>(), CartInterface.View {
 
     override fun getLayout(): Int {
         return R.layout.fragment_cart

@@ -1,13 +1,32 @@
 package com.jingtian.mtdemo.ui.view
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.graphics.Color
+import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.*
+import androidx.cardview.widget.CardView
+import androidx.core.widget.NestedScrollView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.tabs.TabLayout
+import com.jingtian.mtdemo.R
+import com.jingtian.mtdemo.base.BaseApplication
 import com.jingtian.mtdemo.base.interfaces.BaseInterface
 import com.jingtian.mtdemo.base.presenter.BasePresenter
 import com.jingtian.mtdemo.base.view.BaseFragment
-import com.jingtian.mtdemo.R
+import com.jingtian.mtdemo.bean.SortBean
+import com.jingtian.mtdemo.ui.adapters.SortAdapter
+import com.jingtian.mtdemo.ui.interfaces.SortInterface
+import com.jingtian.mtdemo.ui.presenter.SortPresenter
 
-class SortFragment: BaseFragment<BaseInterface.Presenter>() {
-    override fun getPresenter(): BaseInterface.Presenter {
-        return BasePresenter<HomeFragment>()
+class SortFragment : BaseFragment<SortPresenter>(), SortInterface.View {
+    override fun getPresenter(): SortPresenter {
+        return SortPresenter()
     }
     interface TabSelectionListener {
         fun click(id:Long, position: Int)
