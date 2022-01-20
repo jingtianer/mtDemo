@@ -39,6 +39,7 @@
     <string name="commercial">&#xe601;</string>
     <string name="more">&#xe73a;</string>
 
+    <string name="add2cart">&#xe776;</string>
 
     <string name="tvItemCommodity">"商品%d\n%s"</string>
     <string name="tvItemCommodityPrice">"￥%.2f"</string>

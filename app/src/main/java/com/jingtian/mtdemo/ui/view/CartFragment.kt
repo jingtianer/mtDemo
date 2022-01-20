@@ -67,20 +67,25 @@ class CartFragment: BaseFragment<BaseInterface.Presenter>() {
 
     }
 
-    var isBottomBarShown = false
+    var isBottomBarShown = true
     private fun bottomBarShowUp() {
         if (isBottomBarShown) return
         bottomBar?.apply {
-            startAnimation(BaseApplication.anims.showUpAnimation())
+//            startAnimation(BaseApplication.anims.showUpAnimation())
+            BaseApplication.anims.showUpAnimation(this,height).start()
         }
         isBottomBarShown = true
     }
 
     private fun bottomBarExitDown(delay: Long = 0) {
         bottomBar?.apply {
-            startAnimation(BaseApplication.anims.exitAnimation().apply {
-                startOffset = delay
-            })
+//            startAnimation(BaseApplication.anims.exitAnimation().apply {
+//                startOffset = delay
+//            })
+            BaseApplication.anims.exitAnimation(this,height).apply {
+                startDelay = delay
+                start()
+            }
         }
         isBottomBarShown = false
     }
@@ -211,8 +216,24 @@ class CartFragment: BaseFragment<BaseInterface.Presenter>() {
     var mCartAdapter: CartAdapter? = null
     override fun getPresenter(): CartPresenter = CartPresenter()
     override fun provideCartData(cartData: ArrayList<CartBean>) {
+        mCartAdapter?.let{
+            for (item in cartData) {
+                it.add(item)
+            }
+        }
+    }
+
+    override fun provideGuessData(commodityRes: ArrayList<Int>) {
         view?.let {
-            mCartAdapter = CartAdapter(requireActivity(), cartData, listener1, listener2)
+            val rvCartGuess = it.findViewById<RecyclerView>(R.id.rv_cart_guess)
+            RvCommodityAdapter.setWaterfallFlowStyle(rvCartGuess, 2, RvCommodityAdapter.VERTICAL)
+            rvCartGuess.adapter = RvCommodityAdapter(commodityRes)
+        }
+    }
+
+    override fun provideCartUpdate(cartData: ArrayList<CartBean>) {
+        view?.let {
+            mCartAdapter = CartAdapter(cartData, listener1, listener2)
             val rvCart = it.findViewById<RecyclerView>(R.id.rv_cart_cart)
             rvCart?.apply {
                 layoutManager = LinearLayoutManager(context).apply {
@@ -223,17 +244,10 @@ class CartFragment: BaseFragment<BaseInterface.Presenter>() {
         }
     }
 
-    override fun provideGuessData(commodityRes: ArrayList<Int>) {
-        view?.let {
-            val rvCartGuess = it.findViewById<RecyclerView>(R.id.rv_cart_guess)
-            RvCommodityAdapter.setWaterfallFlowStyle(rvCartGuess, 2, RvCommodityAdapter.VERTICAL)
-            rvCartGuess.adapter = RvCommodityAdapter(requireActivity(), commodityRes)
-        }
-    }
-
     override fun onResume() {
         super.onResume()
-        if (selectCount == 0)
-            bottomBarExitDown(300)
+        mPresenter?.requestUpdateCart()
+        if (selectCount == 0 && isBottomBarShown)
+            bottomBarExitDown(200)
     }
 }

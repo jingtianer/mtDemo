@@ -70,7 +70,6 @@ class MineFragment : BaseFragment<MinePresenter>(), MineInterface.View {
                 }
                 adapter = MineAdapter(
                     assets,
-                    it.context,
                     BaseApplication.utils.getScreenWidth() - BaseApplication.utils.dip2px(30f)
                 )
             }
@@ -86,7 +85,6 @@ class MineFragment : BaseFragment<MinePresenter>(), MineInterface.View {
                 }
                 adapter = MineAdapter(
                     wallet,
-                    it.context,
                     BaseApplication.utils.getScreenWidth() - BaseApplication.utils.dip2px(30f)
                 )
             }
@@ -101,7 +99,6 @@ class MineFragment : BaseFragment<MinePresenter>(), MineInterface.View {
                 }
                 adapter = MineAdapter1(
                     function,
-                    it.context,
                     BaseApplication.utils.getScreenWidth() - BaseApplication.utils.dip2px(30f)
                 )
             }

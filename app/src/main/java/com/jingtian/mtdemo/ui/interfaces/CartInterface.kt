@@ -7,10 +7,12 @@ class CartInterface : BaseInterface {
     interface View : BaseInterface.View {
         fun provideCartData(cartData: ArrayList<CartBean>)
         fun provideGuessData(commodityRes: ArrayList<Int>)
+        fun provideCartUpdate(cartData: ArrayList<CartBean>)
     }
 
     interface Presenter : BaseInterface.Presenter {
         fun requestCartData()
         fun requestGuessData()
+        fun requestUpdateCart()
     }
 }

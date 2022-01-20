@@ -9,11 +9,13 @@ class AnimationUtil(val context: Context) {
         return AnimationUtils.loadAnimation(context, R.anim.shake)
     }
 
-    fun showUpAnimation(): Animation {
-        return AnimationUtils.loadAnimation(context, R.anim.show_up)
+    @SuppressLint("ObjectAnimatorBinding")
+    fun showUpAnimation(target:Any, offset:Int): ObjectAnimator {
+        return ObjectAnimator.ofFloat(target, "translationY", offset.toFloat(),0f)
     }
 
-    fun exitAnimation(): Animation {
-        return AnimationUtils.loadAnimation(context, R.anim.exit_down)
+    @SuppressLint("ObjectAnimatorBinding")
+    fun exitAnimation(target:Any, offset:Int): ObjectAnimator {
+        return ObjectAnimator.ofFloat(target, "translationY", 0f, offset.toFloat())
     }
 }

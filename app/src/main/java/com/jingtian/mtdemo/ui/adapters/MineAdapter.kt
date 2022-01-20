@@ -12,7 +12,6 @@ import com.jingtian.mtdemo.bean.MineBean1
 
 class MineAdapter(
     private val data: ArrayList<MineBean1>,
-    private val context: Context,
     private val mWidth: Int
 ) : RecyclerView.Adapter<MineAdapter.ViewHolder>() {
     class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
@@ -23,7 +22,7 @@ class MineAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            LayoutInflater.from(context).inflate(R.layout.item_mine, parent, false).apply {
+            LayoutInflater.from(parent.context).inflate(R.layout.item_mine, parent, false).apply {
                 layoutParams.width = mWidth / data.size
             })
     }

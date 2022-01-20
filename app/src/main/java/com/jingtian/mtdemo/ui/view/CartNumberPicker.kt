@@ -13,7 +13,7 @@ class CartNumberPicker(context: Context, attrs: AttributeSet?) : LinearLayout(co
         fun click(isLeft: Boolean)
     }
 
-    val listeners = mutableListOf<OnClickListener>()
+    private val listeners = mutableListOf<OnClickListener>()
     fun addClickListener(listener: OnClickListener) {
         listeners.add(listener)
     }

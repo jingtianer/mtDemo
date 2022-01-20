@@ -6,7 +6,6 @@ import android.text.SpannableString
 import android.text.style.AbsoluteSizeSpan
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,62 +16,32 @@ import androidx.recyclerview.widget.RecyclerView
 import com.jingtian.mtdemo.R
 import com.jingtian.mtdemo.base.BaseApplication
 import com.jingtian.mtdemo.bean.CartBean
+import com.jingtian.mtdemo.bean.SortBean
 import com.jingtian.mtdemo.ui.view.CartFragment
 import com.jingtian.mtdemo.ui.view.CartNumberPicker
+import com.jingtian.mtdemo.ui.view.SortFragment
 
-class CartAdapter(
-    val data: ArrayList<CartBean>,
-    private val listener1: CartFragment.SelectionClickListener,
-    private val listener2: CartFragment.NumberClickListener
-) :
-    RecyclerView.Adapter<CartAdapter.ViewHolder>() {
-    fun removeAt(position: Int) {
-        data.removeAt(position)
-        notifyItemRemoved(position)
-    }
-    fun add(item:CartBean) {
-        Log.d("add", "success")
-        data.add(item)
-        notifyItemInserted(data.size-1)
-    }
-    fun selectAll() {
-        for (i in 0 until data.size) {
-            if (!data[i].selection)
-                data[i].checkBox?.performClick()
-        }
-    }
-
-    fun unselectAll() {
-        for (i in 0 until data.size) {
-            if (data[i].selection)
-                data[i].checkBox?.performClick()
-        }
-    }
-
+class SortAdapter(
+    val data: ArrayList<SortBean>,
+    val listener: SortFragment.Add2CartListener
+) : RecyclerView.Adapter<SortAdapter.ViewHolder>() {
     class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-
-        val tvCartIcon: TextView = view.findViewById(R.id.tv_cart_icon)
-        val ivPic: ImageView = view.findViewById(R.id.iv_cart_pic)
-        val tvItemName: TextView = view.findViewById(R.id.tv_cart_commodity)
-        val tvPrice: TextView = view.findViewById(R.id.tv_cart_price)
-        val cartNumberPicker: CartNumberPicker = view.findViewById(R.id.cnp_number_picker)
-        val clCartItemRoot: ConstraintLayout = view.findViewById<ConstraintLayout>(R.id.cl_cart_item_root)
-
+        val ivPic: ImageView = view.findViewById(R.id.iv_sort_pic)
+        val tvItemName: TextView = view.findViewById(R.id.tv_sort_commodity)
+        val tvPrice: TextView = view.findViewById(R.id.tv_sort_price)
+        val clCartItemRoot: ConstraintLayout = view.findViewById(R.id.cl_sort_item_root)
+        val tvSortAdd2cart:TextView = view.findViewById(R.id.tv_sort_add2cart)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.item_cart, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.item_sort, parent, false)
         )
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.apply {
-            data[position].checkBox = clCartItemRoot
-            BaseApplication.utils.setFont(tvCartIcon)
             val item = data[position]
-            tvCartIcon.setText(R.string.unchecked)
-            tvCartIcon.setTextColor(BaseApplication.utils.getColor(R.color.orange_secondary))
             ivPic.setImageResource(item.pic)
             val name = view.context.getString(
                 R.string.tvItemCommodity,
@@ -101,17 +70,11 @@ class CartAdapter(
                 )
                 setSpan(AbsoluteSizeSpan(BaseApplication.utils.dip2px(22f)), 1, price.length, 0)
             }
+            BaseApplication.utils.setFont(tvSortAdd2cart)
+            tvSortAdd2cart.text = BaseApplication.utils.getString(R.string.add2cart)
             clCartItemRoot.setOnClickListener {
-                listener1.click(tvCartIcon, item.selection, item)
-                item.selection = !item.selection
+                listener.click(data[position])
             }
-            cartNumberPicker.addClickListener(
-                object : CartNumberPicker.OnClickListener {
-                    override fun click(isLeft: Boolean) {
-                        listener2.click(cartNumberPicker, item.pic)
-                    }
-                }
-            )
         }
     }
 
