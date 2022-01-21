@@ -29,7 +29,7 @@ class MineAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.apply {
             if (data[position].is_icon) {
-                BaseApplication.utils.setFont(tvItemMine1)
+                BaseApplication.utilsHolder.utils.setFont(tvItemMine1)
             }
             tvItemMine1.text = data[position].text1
             tvItemMine2.text = data[position].text2

@@ -84,8 +84,8 @@ class RvCommodityAdapter(private val data: ArrayList<Int>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val description = BaseApplication.utils.getDescription()
-        val price = BaseApplication.utils.getPrice()
+        val description = BaseApplication.utilsHolder.utils.getDescription()
+        val price = BaseApplication.utilsHolder.utils.getPrice()
 
         holder.apply {
             ivCommodity.setImageResource(data[position])

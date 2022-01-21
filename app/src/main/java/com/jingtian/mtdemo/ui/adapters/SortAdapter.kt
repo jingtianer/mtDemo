@@ -20,7 +20,7 @@ import com.jingtian.mtdemo.ui.view.SortFragment
 
 class SortAdapter(
     val data: ArrayList<SortBean>,
-    val listener: SortFragment.Add2CartListener
+    private val listener: SortFragment.Add2CartListener
 ) : RecyclerView.Adapter<SortAdapter.ViewHolder>() {
     class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         val ivPic: ImageView = view.findViewById(R.id.iv_sort_pic)
@@ -48,7 +48,7 @@ class SortAdapter(
             tvItemName.text = SpannableString(name).apply {
                 setSpan(StyleSpan(Typeface.BOLD), 0, name.length, 0)
                 setSpan(ForegroundColorSpan(Color.BLACK), 0, name.length, 0)
-                setSpan(AbsoluteSizeSpan(BaseApplication.utils.dip2px(20f)), 0, name.length, 0)
+                setSpan(AbsoluteSizeSpan(BaseApplication.utilsHolder.utils.dip2px(20f)), 0, name.length, 0)
             }
             val price = "￥${item.price}"
             tvPrice.text = SpannableString(price).apply {
@@ -58,17 +58,17 @@ class SortAdapter(
                     1,
                     0
                 )
-                setSpan(AbsoluteSizeSpan(BaseApplication.utils.dip2px(16f)), 0, 1, 0)
+                setSpan(AbsoluteSizeSpan(BaseApplication.utilsHolder.utils.dip2px(16f)), 0, 1, 0)
                 setSpan(
-                    ForegroundColorSpan(BaseApplication.utils.getColor(R.color.orange)),
+                    ForegroundColorSpan(BaseApplication.utilsHolder.utils.getColor(R.color.orange)),
                     1,
                     price.length,
                     0
                 )
-                setSpan(AbsoluteSizeSpan(BaseApplication.utils.dip2px(22f)), 1, price.length, 0)
+                setSpan(AbsoluteSizeSpan(BaseApplication.utilsHolder.utils.dip2px(22f)), 1, price.length, 0)
             }
-            BaseApplication.utils.setFont(tvSortAdd2cart)
-            tvSortAdd2cart.text = BaseApplication.utils.getString(R.string.add2cart)
+            BaseApplication.utilsHolder.utils.setFont(tvSortAdd2cart)
+            tvSortAdd2cart.text = BaseApplication.utilsHolder.utils.getString(R.string.add2cart)
             clCartItemRoot.setOnClickListener {
                 listener.click(data[position])
             }

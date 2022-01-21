@@ -14,6 +14,8 @@ import com.jingtian.mtdemo.R
 import com.jingtian.mtdemo.base.BaseApplication
 import com.jingtian.mtdemo.base.view.BaseActivity
 import com.jingtian.mtdemo.bean.NaviBean
+import com.jingtian.mtdemo.databinding.ActivityLoginBinding
+import com.jingtian.mtdemo.databinding.ActivityMainBinding
 import com.jingtian.mtdemo.ui.adapters.MainViewPagerAdapter
 import com.jingtian.mtdemo.ui.interfaces.MainInterface
 import com.jingtian.mtdemo.ui.presenter.MainPresenter
@@ -49,7 +51,7 @@ class MainActivity : BaseActivity<MainInterface.Presenter>(), MainInterface.View
     private var pagerCallback = object : ViewPager2.OnPageChangeCallback() {
         override fun onPageSelected(position: Int) {
             super.onPageSelected(position)
-            (rcBtmNavi?.adapter as NaviAdapter).apply {
+            (binding.rcBtmNavi?.adapter as NaviAdapter).apply {
                 changeSelectedItem(position)
                 if (getLayoutId(position) == R.layout.fragment_mine) {
                     login()
@@ -57,28 +59,24 @@ class MainActivity : BaseActivity<MainInterface.Presenter>(), MainInterface.View
             }
         }
     }
-    var rcBtmNavi: RecyclerView? = null
-    var viewPagerMain: ViewPager2? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTransparentBars()
 
-        viewPagerMain = findViewById<ViewPager2>(R.id.fl_main)
-        viewPagerMain?.apply {
+        binding.flMain.apply {
             adapter = MainViewPagerAdapter(supportFragmentManager, lifecycle, naviArr)
             registerOnPageChangeCallback(pagerCallback)
             offscreenPageLimit = naviArr.size - 1
             //建议设置为n-1
         }
 
-        rcBtmNavi = findViewById<RecyclerView>(R.id.rc_btm_navi)
-        rcBtmNavi?.apply {
+        binding.rcBtmNavi.apply {
             layoutManager = GridLayoutManager(this@MainActivity, 1).apply {
                 orientation = GridLayoutManager.HORIZONTAL
             }
             adapter = NaviAdapter(naviArr, this@MainActivity, object : NaviItemClick {
                 override fun click(position: Int) {
-                    viewPagerMain?.setCurrentItem(position, true)
+                    binding.flMain.setCurrentItem(position, true)
 //                    if (naviArr[position].id == R.layout.fragment_mine) {
 //                        login()
 //                    }
@@ -145,7 +143,7 @@ class MainActivity : BaseActivity<MainInterface.Presenter>(), MainInterface.View
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val item = naviArr[position]
             naviArr[position].mHolder = holder
-            BaseApplication.utils.setFont(holder.itemNaviIcon)
+            BaseApplication.utilsHolder.utils.setFont(holder.itemNaviIcon)
             holder.apply {
                 itemNaviTitle.text = item.title
                 itemNaviIcon.setTextColor(ContextCompat.getColor(activity, R.color.black))
@@ -178,5 +176,11 @@ class MainActivity : BaseActivity<MainInterface.Presenter>(), MainInterface.View
             }
         }
 
+    }
+
+    private lateinit var binding: ActivityMainBinding
+    override fun viewBinding(): View {
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        return binding.root
     }
 }

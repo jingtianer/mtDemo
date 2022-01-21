@@ -30,14 +30,14 @@ class RcHomeFunctionAdapter(
                 )
 //                view.setPadding(10,10,10,10)
         mView.layoutParams.width =
-            (BaseApplication.utils.getScreenWidth()) / ceil(functionList.size.toFloat() / spanCount).toInt()
+            (BaseApplication.utilsHolder.utils.getScreenWidth()) / ceil(functionList.size.toFloat() / spanCount).toInt()
         mView.layoutParams.height = (mView.layoutParams.width)
         return ViewHolder(mView)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = functionList[position]
-        BaseApplication.utils.setFont(holder.itemNaviIcon)
+        BaseApplication.utilsHolder.utils.setFont(holder.itemNaviIcon)
         holder.apply {
             itemNaviTitle.text = item.title
             itemNaviIcon.setText(item.icon)

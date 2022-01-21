@@ -24,6 +24,7 @@
         </activity>
         <activity android:name=".ui.view.MainActivity" />
         <activity android:name=".ui.view.LoginActivity" />
+        <activity android:name=".ui.view.SearchActivity"/>
     </application>
 
 </manifest>

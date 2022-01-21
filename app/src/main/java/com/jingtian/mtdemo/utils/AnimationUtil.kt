@@ -12,6 +12,10 @@ class AnimationUtil(val context: Context) {
         return AnimationUtils.loadAnimation(context, R.anim.shake)
     }
 
+    fun getAnimation(id:Int):Animation {
+        return AnimationUtils.loadAnimation(context, id)
+    }
+
     @SuppressLint("ObjectAnimatorBinding")
     fun showUpAnimation(target: Any, offset: Int): ObjectAnimator {
         return ObjectAnimator.ofFloat(target, "translationY", offset.toFloat(), 0f)

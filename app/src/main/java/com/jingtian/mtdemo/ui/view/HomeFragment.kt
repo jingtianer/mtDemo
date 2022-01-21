@@ -1,22 +1,26 @@
 package com.jingtian.mtdemo.ui.view
 
+import android.annotation.SuppressLint
+import android.app.ActivityOptions
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.view.GestureDetector
-import android.view.MotionEvent
-import android.view.View
+import android.view.*
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.ViewFlipper
+import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jingtian.mtdemo.R
 import com.jingtian.mtdemo.base.BaseApplication
 import com.jingtian.mtdemo.base.view.BaseFragment
 import com.jingtian.mtdemo.bean.FunctionBean
+import com.jingtian.mtdemo.databinding.FragmentCartBinding
+import com.jingtian.mtdemo.databinding.FragmentHomeBinding
 import com.jingtian.mtdemo.ui.adapters.RcHomeFunctionAdapter
 import com.jingtian.mtdemo.ui.adapters.RvCommodityAdapter
 import com.jingtian.mtdemo.ui.interfaces.HomeInterface
@@ -28,18 +32,22 @@ class HomeFragment : BaseFragment<HomePresenter>(), HomeInterface.View {
     private var callback: ViewFlipperTouchEvent? = null
 
 
+    @SuppressLint("CutPasteId")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         view.let {
-            val homeSearchBar = it.findViewById<LinearLayout>(R.id.home_search_bar)
-            homeSearchBar.layoutParams =
-                (homeSearchBar.layoutParams as LinearLayout.LayoutParams).apply {
+            binding.homeSearchBar.layoutParams =
+                (binding.homeSearchBar.layoutParams as LinearLayout.LayoutParams).apply {
                     setMargins(leftMargin, getStatusBarHeight() + 45, rightMargin, bottomMargin)
                 }
-            val tvSearchBar = it.findViewById<TextView>(R.id.tv_search_bar)
-            BaseApplication.utils.setFont(tvSearchBar)
-
-
+            BaseApplication.utilsHolder.utils.setFont(binding.tvSearchBar)
+            binding.homeSearchBar.setOnClickListener {
+                val intent = Intent(this.context, SearchActivity::class.java)
+                startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(
+                    this.activity, binding.homeSearchBar, ViewCompat.getTransitionName(binding.homeSearchBar)
+                ).toBundle())
+            }
         }
 
         mPresenter?.requestFunctionData()
@@ -50,7 +58,7 @@ class HomeFragment : BaseFragment<HomePresenter>(), HomeInterface.View {
     private fun getImg(img: Int): Bitmap? {
         view?.let {
             val bitmap = BitmapFactory.decodeResource(resources, img)
-            val distW = BaseApplication.utils.getScreenWidth() * 0.95
+            val distW = BaseApplication.utilsHolder.utils.getScreenWidth() * 0.95
             val distH = bitmap.height * (1.0 * distW / bitmap.width)
             return Bitmap.createScaledBitmap(bitmap, distW.toInt(), distH.toInt(), false)
         }
@@ -58,12 +66,10 @@ class HomeFragment : BaseFragment<HomePresenter>(), HomeInterface.View {
 
     }
 
-
     override fun onStart() {
         //此时activity已经创建了
-        if (activity != null) {
-            val vfMain = view?.findViewById<ViewFlipper>(R.id.vf_main)
-            vfMain?.let {
+        if (activity != null) {binding.homeSearchBar
+            binding.vfMain.let {
                 callback = (activity as MainActivity).getCallback()
                 val gestureDetector =
                     GestureDetector(context, ViewFlipperTouchListener(it, context))
@@ -115,32 +121,39 @@ class HomeFragment : BaseFragment<HomePresenter>(), HomeInterface.View {
 
     override fun provideFunctionData(functionList: ArrayList<FunctionBean>) {
         view?.let {
-            val rcHomeFunction = it.findViewById<RecyclerView>(R.id.rc_home_function)
             val spanCount = 2
-            rcHomeFunction.layoutManager = GridLayoutManager(context, spanCount).apply {
+            binding.rcHomeFunction.layoutManager = GridLayoutManager(context, spanCount).apply {
                 orientation = GridLayoutManager.HORIZONTAL
             }
-            rcHomeFunction.adapter = RcHomeFunctionAdapter(functionList, spanCount)
+            binding.rcHomeFunction.adapter = RcHomeFunctionAdapter(functionList, spanCount)
         }
     }
 
     override fun provideImageData(imgRes: ArrayList<Int>) {
         view?.let {
-            val vfMain = it.findViewById<ViewFlipper>(R.id.vf_main)
             for (img in imgRes) {
-                vfMain.addView(ImageView(it.context).apply {
+                binding.vfMain.addView(ImageView(it.context).apply {
                     setImageBitmap(getImg(img))
                 })
             }
-            vfMain.startFlipping()
+            binding.vfMain.startFlipping()
         }
     }
 
     override fun provideCommodityData(commodities: ArrayList<Int>) {
         view?.let {
-            val rvCommodity = it.findViewById<RecyclerView>(R.id.rv_commodity)
-            RvCommodityAdapter.setWaterfallFlowStyle(rvCommodity, 2, RvCommodityAdapter.VERTICAL)
-            rvCommodity.adapter = RvCommodityAdapter(commodities)
+            RvCommodityAdapter.setWaterfallFlowStyle(binding.rvCommodity, 2, RvCommodityAdapter.VERTICAL)
+            binding.rvCommodity.adapter = RvCommodityAdapter(commodities)
         }
+    }
+
+    private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
+    override fun viewBinding(inflater: LayoutInflater, container: ViewGroup?,): View? {
+        _binding = FragmentHomeBinding.inflate(inflater, container,false)
+        return _binding?.root
+    }
+    override fun unViewBinding() {
+        _binding = null
     }
 }

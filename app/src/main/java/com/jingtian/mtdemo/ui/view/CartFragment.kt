@@ -2,16 +2,20 @@ package com.jingtian.mtdemo.ui.view
 
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.jingtian.mtdemo.BuildConfig
 import com.jingtian.mtdemo.R
 import com.jingtian.mtdemo.base.BaseApplication
 import com.jingtian.mtdemo.base.view.BaseFragment
 import com.jingtian.mtdemo.bean.CartBean
+import com.jingtian.mtdemo.databinding.FragmentCartBinding
 import com.jingtian.mtdemo.ui.adapters.CartAdapter
 import com.jingtian.mtdemo.ui.adapters.RvCommodityAdapter
 import com.jingtian.mtdemo.ui.interfaces.CartInterface
@@ -33,7 +37,7 @@ class CartFragment : BaseFragment<CartPresenter>(), CartInterface.View {
 
         selectCount++
         if (isSelectAll()) {
-            tvSelectAll?.text = BaseApplication.utils.getString(R.string.checked)
+            binding.tvCartSelectAll.text = BaseApplication.utilsHolder.utils.getString(R.string.checked)
         }
     }
 
@@ -42,7 +46,7 @@ class CartFragment : BaseFragment<CartPresenter>(), CartInterface.View {
             disableButton(tvLabelRight)
             bottomBarExitDown()
         }
-        tvSelectAll?.text = BaseApplication.utils.getString(R.string.unchecked)
+        binding.tvCartSelectAll.text = BaseApplication.utilsHolder.utils.getString(R.string.unchecked)
         selectCount--
     }
 
@@ -62,35 +66,36 @@ class CartFragment : BaseFragment<CartPresenter>(), CartInterface.View {
             }
             updateTotal()
         }
-
     }
 
     fun updateTotal() {
         var totalPrice = 0f
         for (item in selectedItem) {
             totalPrice += item.price * item.n
-            Log.d("价格", "$totalPrice")
+            if (BuildConfig.DEBUG) {
+                Log.d("价格", "$totalPrice")
+            }
         }
-        cartTotal?.text = "$totalPrice"
+        binding.cartTotal.text = "$totalPrice"
 
     }
 
     var isBottomBarShown = true
     private fun bottomBarShowUp() {
         if (isBottomBarShown) return
-        bottomBar?.apply {
-//            startAnimation(BaseApplication.anims.showUpAnimation())
-            BaseApplication.anims.showUpAnimation(this, height).start()
+        binding.llCartBottom?.apply {
+//            startAnimation(BaseApplication.utilsHolder.anims.showUpAnimation())
+            BaseApplication.utilsHolder.anims.showUpAnimation(this, height).start()
         }
         isBottomBarShown = true
     }
 
     private fun bottomBarExitDown(delay: Long = 0) {
-        bottomBar?.apply {
-//            startAnimation(BaseApplication.anims.exitAnimation().apply {
+        binding.llCartBottom?.apply {
+//            startAnimation(BaseApplication.utilsHolder.anims.exitAnimation().apply {
 //                startOffset = delay
 //            })
-            BaseApplication.anims.exitAnimation(this, height).apply {
+            BaseApplication.utilsHolder.anims.exitAnimation(this, height).apply {
                 startDelay = delay
                 start()
             }
@@ -120,18 +125,12 @@ class CartFragment : BaseFragment<CartPresenter>(), CartInterface.View {
         }
     }
 
-    private var bottomBar: LinearLayout? = null
-    private var tvLabelLeft: TextView? = null
-    private var tvLabelRight: TextView? = null
-    private var tvSelectAll: TextView? = null
-    private var cartTotal: TextView? = null
     private fun isSelectAll() = selectCount == mCartAdapter?.itemCount
     private fun getToolbar(view: View) = view.findViewById<LinearLayout>(R.id.ll_toolbar_root)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         view.let {
-            val llCartFirst = it.findViewById<LinearLayout>(R.id.ll_cart_first)
-            llCartFirst.apply {
+            binding.llCartFirst.apply {
                 setPadding(
                     paddingLeft,
                     paddingTop + getStatusBarHeight(),
@@ -139,26 +138,22 @@ class CartFragment : BaseFragment<CartPresenter>(), CartInterface.View {
                     paddingBottom
                 )
             }
-            cartTotal = it.findViewById(R.id.cart_total)
             //请求recyclerview的数据
             mPresenter?.requestGuessData()
             mPresenter?.requestCartData()
             //初始化按钮与点击操作
             initButtons(it)
-            bottomBar = it.findViewById(R.id.ll_cart_bottom)
-            tvSelectAll = it.findViewById(R.id.tv_cart_select_all)
-            val rvCart = it.findViewById<RecyclerView>(R.id.rv_cart_cart)
-            tvSelectAll?.apply {
-                BaseApplication.utils.setFont(this)
-                text = BaseApplication.utils.getString(R.string.unchecked)
-                it.findViewById<ConstraintLayout>(R.id.cl_cart_select_all)?.setOnClickListener {
+            binding.tvCartSelectAll?.apply {
+                BaseApplication.utilsHolder.utils.setFont(this)
+                text = BaseApplication.utilsHolder.utils.getString(R.string.unchecked)
+                binding.clCartSelectAll.setOnClickListener {
                     if (isBottomBarShown) {
                         text = if (isSelectAll()) {
-                            (rvCart.adapter as CartAdapter).unselectAll()
-                            BaseApplication.utils.getString(R.string.unchecked)
+                            (binding.rvCartCart.adapter as CartAdapter).unselectAll()
+                            BaseApplication.utilsHolder.utils.getString(R.string.unchecked)
                         } else {
-                            (rvCart.adapter as CartAdapter).selectAll()
-                            BaseApplication.utils.getString(R.string.checked)
+                            (binding.rvCartCart.adapter as CartAdapter).selectAll()
+                            BaseApplication.utilsHolder.utils.getString(R.string.checked)
                         }
                     }
                 }
@@ -175,18 +170,18 @@ class CartFragment : BaseFragment<CartPresenter>(), CartInterface.View {
         fun click()
     }
 
-
+    private var tvLabelLeft:TextView? = null
+    private var tvLabelRight:TextView? = null
     private fun initButtons(it: View) {
         val toolbar = getToolbar(it)
         val tvTitle = toolbar.findViewById<TextView>(R.id.tv_label_title)
         tvTitle.text = "购物车"
         tvLabelLeft = toolbar.findViewById(R.id.tv_label_left)
         tvLabelRight = toolbar.findViewById(R.id.tv_label_right)
-        val rvCart = it.findViewById<RecyclerView>(R.id.rv_cart_cart)
         tvLabelLeft?.apply {
             text = "清空"
             setOnClickListener {
-                val adapter = rvCart.adapter as CartAdapter
+                val adapter = binding.rvCartCart.adapter as CartAdapter
                 while (adapter.itemCount > 0) {
                     adapter.removeAt(0)
                 }
@@ -203,7 +198,7 @@ class CartFragment : BaseFragment<CartPresenter>(), CartInterface.View {
         tvLabelRight?.apply {
             text = "删除"
             setOnClickListener {
-                val adapter = rvCart.adapter as CartAdapter
+                val adapter = binding.rvCartCart.adapter as CartAdapter
                 for (item in selectedItem) {
                     adapter.removeAt(adapter.indexOf(item))
                 }
@@ -231,17 +226,15 @@ class CartFragment : BaseFragment<CartPresenter>(), CartInterface.View {
 
     override fun provideGuessData(commodityRes: ArrayList<Int>) {
         view?.let {
-            val rvCartGuess = it.findViewById<RecyclerView>(R.id.rv_cart_guess)
-            RvCommodityAdapter.setWaterfallFlowStyle(rvCartGuess, 2, RvCommodityAdapter.VERTICAL)
-            rvCartGuess.adapter = RvCommodityAdapter(commodityRes)
+            RvCommodityAdapter.setWaterfallFlowStyle(binding.rvCartGuess, 2, RvCommodityAdapter.VERTICAL)
+            binding.rvCartGuess.adapter = RvCommodityAdapter(commodityRes)
         }
     }
 
     override fun provideCartUpdate(cartData: ArrayList<CartBean>) {
         view?.let {
             mCartAdapter = CartAdapter(cartData, listener1, listener2)
-            val rvCart = it.findViewById<RecyclerView>(R.id.rv_cart_cart)
-            rvCart?.apply {
+            binding.rvCartCart?.apply {
                 layoutManager = LinearLayoutManager(context).apply {
                     orientation = LinearLayoutManager.VERTICAL
                 }
@@ -255,5 +248,15 @@ class CartFragment : BaseFragment<CartPresenter>(), CartInterface.View {
         mPresenter?.requestUpdateCart()
         if (selectCount == 0 && isBottomBarShown)
             bottomBarExitDown(200)
+    }
+
+    private var _binding: FragmentCartBinding? = null
+    private val binding get() = _binding!!
+    override fun viewBinding(inflater: LayoutInflater, container: ViewGroup?,): View? {
+        _binding = FragmentCartBinding.inflate(inflater, container,false)
+        return _binding?.root
+    }
+    override fun unViewBinding() {
+        _binding = null
     }
 }

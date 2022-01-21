@@ -10,16 +10,19 @@ import androidx.fragment.app.FragmentActivity
 import com.jingtian.mtdemo.R
 import com.jingtian.mtdemo.base.BaseApplication
 import com.jingtian.mtdemo.base.interfaces.BaseInterface
+import com.jingtian.mtdemo.databinding.ActivityMainBinding
 import com.jingtian.mtdemo.ui.view.LoginActivity
-
 abstract class BaseActivity<T : BaseInterface.Presenter> : FragmentActivity(), BaseInterface.View {
+
     fun login() {
-        if (!BaseApplication.sp.login) {
+        if (!BaseApplication.utilsHolder.sp.login) {
             val intent = Intent(this, LoginActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             startActivity(intent)
         }
     }
+
+
 
     private var mPresenter: T? = null
     abstract fun getPresenter(): T
@@ -38,7 +41,7 @@ abstract class BaseActivity<T : BaseInterface.Presenter> : FragmentActivity(), B
         }
     }
 
-    private fun getStatusBarHeight(): Int {
+    fun getStatusBarHeight(): Int {
         var statusBarHeight = -1
         //获取status_bar_height资源的ID
         val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
@@ -56,15 +59,13 @@ abstract class BaseActivity<T : BaseInterface.Presenter> : FragmentActivity(), B
         layoutParams.setMargins(0, getStatusBarHeight(), 0, 0)
         statusBar.layoutParams = layoutParams
     }
-
+    abstract fun viewBinding():View
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bind()
-        val view = layoutInflater.inflate(getLayout(), null)
+        val view = viewBinding()
         setContentView(view)
         setTransparentBars()
-
-
     }
 
     override fun onDestroy() {

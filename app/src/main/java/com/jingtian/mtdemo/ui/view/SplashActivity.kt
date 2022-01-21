@@ -5,17 +5,21 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import com.jingtian.mtdemo.BuildConfig
 import com.jingtian.mtdemo.R
 import com.jingtian.mtdemo.base.interfaces.BaseInterface
 import com.jingtian.mtdemo.base.presenter.BasePresenter
 import com.jingtian.mtdemo.base.view.BaseActivity
+import com.jingtian.mtdemo.databinding.*
 import java.util.*
 
 @SuppressLint("CustomSplashScreen")
@@ -51,7 +55,9 @@ class SplashActivity : BaseActivity<BaseInterface.Presenter>() {
     }
 
     fun startMainActivity() {
-        Log.d("start main activity", "start main activity")
+        if (BuildConfig.DEBUG) {
+            Log.d("start main activity", "start main activity")
+        }
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         this.finish()
@@ -67,7 +73,9 @@ class SplashActivity : BaseActivity<BaseInterface.Presenter>() {
         override fun run() {
             activity.runOnUiThread {
                 val tvDelay = activity.findViewById<TextView>(R.id.sp_delay)
-                Log.d("delay", "${splashDelay}s")
+                if (BuildConfig.DEBUG) {
+                    Log.d("delay", "${splashDelay}s")
+                }
                 tvDelay.text = activity.resources.getString(R.string.tvDelay, splashDelay)
                 if (splashDelay == 0) {
                     activity.startMainActivity()
@@ -85,7 +93,7 @@ class SplashActivity : BaseActivity<BaseInterface.Presenter>() {
         //hideSystemBars()
         setBackGround()
         //倒计时
-        findViewById<TextView>(R.id.tv_sp_skip).setOnClickListener {
+        binding.tvSpSkip.setOnClickListener {
             startMainActivity()
             timer?.cancel()
         }
@@ -146,11 +154,11 @@ class SplashActivity : BaseActivity<BaseInterface.Presenter>() {
     }
 
     override fun onPause() {
+        super.onPause()
         timer?.cancel()
         splashTimer?.cancel()
         timer = null
         splashTimer = null
-        super.onPause()
     }
 
     override fun onResume() {
@@ -160,4 +168,11 @@ class SplashActivity : BaseActivity<BaseInterface.Presenter>() {
         timer?.scheduleAtFixedRate(SplashTimerTask(this, splashDelay), 0, 1000)
         startSplash()
     }
+
+    private lateinit var binding: ActivitySplashBinding
+    override fun viewBinding(): View {
+        binding = ActivitySplashBinding.inflate(layoutInflater)
+        return binding.root
+    }
+
 }

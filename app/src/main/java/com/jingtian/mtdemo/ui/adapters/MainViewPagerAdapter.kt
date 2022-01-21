@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.jingtian.mtdemo.BuildConfig
 import com.jingtian.mtdemo.R
 import com.jingtian.mtdemo.bean.NaviBean
 import com.jingtian.mtdemo.ui.view.CartFragment
@@ -20,7 +21,9 @@ class MainViewPagerAdapter(
     private val fragments: MutableMap<Int, Fragment> = mutableMapOf()
     private fun getInstance(i: Int): Fragment {
         if (!fragments.containsKey(i)) {
-            Log.d("create fragment", "$i")
+            if (BuildConfig.DEBUG) {
+                Log.d("create fragment", "$i")
+            }
             //fragments[i] = Class.forName(naviArr[i].class_name).newInstance() as Fragment
             fragments[i] = when (i) {
                 R.layout.fragment_home -> {

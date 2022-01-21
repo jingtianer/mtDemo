@@ -13,6 +13,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
+import com.jingtian.mtdemo.BuildConfig
 import com.jingtian.mtdemo.R
 import com.jingtian.mtdemo.base.BaseApplication
 import com.jingtian.mtdemo.bean.CartBean
@@ -39,7 +40,9 @@ class CartAdapter(
 //            it.pic == item.pic
 //        }
 //        if (i != null) {
+//        if (BuildConfig.DEBUG) {
 //            Log.d("add", "find same")
+//        }
 //            i.n++
 //        } else {
 //            data.add(item)
@@ -83,10 +86,10 @@ class CartAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.apply {
             data[position].checkBox = clCartItemRoot
-            BaseApplication.utils.setFont(tvCartIcon)
+            BaseApplication.utilsHolder.utils.setFont(tvCartIcon)
             val item = data[position]
             tvCartIcon.setText(R.string.unchecked)
-            tvCartIcon.setTextColor(BaseApplication.utils.getColor(R.color.orange_secondary))
+            tvCartIcon.setTextColor(BaseApplication.utilsHolder.utils.getColor(R.color.orange_secondary))
             ivPic.setImageResource(item.pic)
             val name = view.context.getString(
                 R.string.tvItemCommodity,
@@ -96,7 +99,7 @@ class CartAdapter(
             tvItemName.text = SpannableString(name).apply {
                 setSpan(StyleSpan(Typeface.BOLD), 0, name.length, 0)
                 setSpan(ForegroundColorSpan(Color.BLACK), 0, name.length, 0)
-                setSpan(AbsoluteSizeSpan(BaseApplication.utils.dip2px(20f)), 0, name.length, 0)
+                setSpan(AbsoluteSizeSpan(BaseApplication.utilsHolder.utils.dip2px(20f)), 0, name.length, 0)
             }
             val price = "￥${item.price}"
             tvPrice.text = SpannableString(price).apply {
@@ -106,14 +109,14 @@ class CartAdapter(
                     1,
                     0
                 )
-                setSpan(AbsoluteSizeSpan(BaseApplication.utils.dip2px(16f)), 0, 1, 0)
+                setSpan(AbsoluteSizeSpan(BaseApplication.utilsHolder.utils.dip2px(16f)), 0, 1, 0)
                 setSpan(
-                    ForegroundColorSpan(BaseApplication.utils.getColor(R.color.orange)),
+                    ForegroundColorSpan(BaseApplication.utilsHolder.utils.getColor(R.color.orange)),
                     1,
                     price.length,
                     0
                 )
-                setSpan(AbsoluteSizeSpan(BaseApplication.utils.dip2px(22f)), 1, price.length, 0)
+                setSpan(AbsoluteSizeSpan(BaseApplication.utilsHolder.utils.dip2px(22f)), 1, price.length, 0)
             }
             clCartItemRoot.setOnClickListener {
                 listener1.click(tvCartIcon, item.selection, item)

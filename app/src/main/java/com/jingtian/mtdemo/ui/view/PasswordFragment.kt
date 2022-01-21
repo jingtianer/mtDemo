@@ -4,14 +4,18 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.*
 import com.jingtian.mtdemo.R
 import com.jingtian.mtdemo.base.BaseApplication
 import com.jingtian.mtdemo.base.view.BaseFragment
+import com.jingtian.mtdemo.databinding.FragmentMineBinding
+import com.jingtian.mtdemo.databinding.FragmentPasswordBinding
 import com.jingtian.mtdemo.ui.interfaces.LoginInterface
 import com.jingtian.mtdemo.ui.presenter.LoginPresenter
 
@@ -28,83 +32,74 @@ class PasswordFragment : BaseFragment<LoginPresenter>(), LoginInterface.View {
         super.onViewCreated(view, savedInstanceState)
         view.let { it ->
             //checkbox图标切换
-            val tvCheckboxLogin = it.findViewById<TextView>(R.id.tv_checkbox_login)
-            val llAgreementLogin = it.findViewById<LinearLayout>(R.id.ll_agreement_login)
-            BaseApplication.utils.setFont(tvCheckboxLogin)
-            llAgreementLogin.setOnClickListener {
+            BaseApplication.utilsHolder.utils.setFont(binding.tvCheckboxLogin)
+            binding.llAgreementLogin.setOnClickListener {
                 if (agree) {
-                    tvCheckboxLogin.setText(R.string.unchecked)
+                    binding.tvCheckboxLogin.setText(R.string.unchecked)
                 } else {
-                    tvCheckboxLogin.setText(R.string.checked)
+                    binding.tvCheckboxLogin.setText(R.string.checked)
                 }
                 agree = !agree
             }
 
             //切换动画，登录方式切换
-            val tvPwdChange = it.findViewById<TextView>(R.id.tv_fgpwd_change)
-            val tvPwdLoginHint = it.findViewById<TextView>(R.id.tv_fgpwd_loginhint)
-            val llPwd = it.findViewById<LinearLayout>(R.id.ll_pwd)
-            val pwdDivider2 = it.findViewById<View>(R.id.fgpwd_divider2)
-            val btLogin = it.findViewById<Button>(R.id.bt_login)
             isPassword = true
-            tvPwdChange.setOnClickListener {
+            binding.tvFgpwdChange.setOnClickListener {
                 if (isPassword) {
                     val itemIn = AnimationUtils.loadAnimation(this.context, R.anim.item_in)
                     val itemOut = AnimationUtils.loadAnimation(this.context, R.anim.item_out)
                     itemOut.setAnimationListener(object : Animation.AnimationListener {
                         override fun onAnimationStart(p0: Animation?) {}
                         override fun onAnimationEnd(p0: Animation?) {
-                            llPwd.visibility = View.GONE
-                            pwdDivider2.visibility = View.GONE
+                            binding.llPwd.visibility = View.GONE
+                            binding.fgpwdDivider2.visibility = View.GONE
                         }
 
                         override fun onAnimationRepeat(p0: Animation?) {}
                     })
                     itemIn.setAnimationListener(object : Animation.AnimationListener {
                         override fun onAnimationStart(p0: Animation?) {
-                            tvPwdLoginHint.visibility = View.VISIBLE
+                            binding.tvFgpwdLoginhint.visibility = View.VISIBLE
                         }
 
                         override fun onAnimationEnd(p0: Animation?) {}
                         override fun onAnimationRepeat(p0: Animation?) {}
                     })
-                    llPwd.startAnimation(itemOut)
-                    pwdDivider2.startAnimation(itemOut)
-                    tvPwdLoginHint.startAnimation(itemIn)
-                    tvPwdChange.text = "使用密码"
-                    btLogin.text = "获取验证码"
+                    binding.llPwd.startAnimation(itemOut)
+                    binding.fgpwdDivider2.startAnimation(itemOut)
+                    binding.tvFgpwdLoginhint.startAnimation(itemIn)
+                    binding.tvFgpwdChange.text = "使用密码"
+                    binding.btLogin.text = "获取验证码"
                 } else {
                     val itemIn = AnimationUtils.loadAnimation(this.context, R.anim.item_back)
                     val itemOut = AnimationUtils.loadAnimation(this.context, R.anim.item_exit)
                     itemOut.setAnimationListener(object : Animation.AnimationListener {
                         override fun onAnimationStart(p0: Animation?) {}
                         override fun onAnimationEnd(p0: Animation?) {
-                            tvPwdLoginHint.visibility = View.GONE
+                            binding.tvFgpwdLoginhint.visibility = View.GONE
                         }
 
                         override fun onAnimationRepeat(p0: Animation?) {}
                     })
                     itemIn.setAnimationListener(object : Animation.AnimationListener {
                         override fun onAnimationStart(p0: Animation?) {
-                            llPwd.visibility = View.VISIBLE
-                            pwdDivider2.visibility = View.VISIBLE
+                            binding.llPwd.visibility = View.VISIBLE
+                            binding.fgpwdDivider2.visibility = View.VISIBLE
                         }
 
                         override fun onAnimationEnd(p0: Animation?) {}
                         override fun onAnimationRepeat(p0: Animation?) {}
                     })
-                    llPwd.startAnimation(itemIn)
-                    pwdDivider2.startAnimation(itemIn)
-                    tvPwdLoginHint.startAnimation(itemOut)
-                    tvPwdChange.text = "使用验证码"
-                    btLogin.text = "登录"
+                    binding.llPwd.startAnimation(itemIn)
+                    binding.fgpwdDivider2.startAnimation(itemIn)
+                    binding.tvFgpwdLoginhint.startAnimation(itemOut)
+                    binding.tvFgpwdChange.text = "使用验证码"
+                    binding.btLogin.text = "登录"
                 }
                 isPassword = !isPassword
             }
             //获取输入框
-            val etPhone = it.findViewById<EditText>(R.id.et_phone)
-            val etPwd = it.findViewById<EditText>(R.id.et_pwd)
-            etPhone.addTextChangedListener(object : TextWatcher {
+            binding.etPhone.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
                 override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -116,43 +111,40 @@ class PasswordFragment : BaseFragment<LoginPresenter>(), LoginInterface.View {
             })
 
             //显示密码按钮
-            val tvShowPdLogin = it.findViewById<TextView>(R.id.tv_show_pd_login)
-            BaseApplication.utils.setFont(tvShowPdLogin)
-            tvShowPdLogin.setOnTouchListener { _, motionEvent ->
+            BaseApplication.utilsHolder.utils.setFont(binding.tvShowPdLogin)
+            binding.tvShowPdLogin.setOnTouchListener { _, motionEvent ->
                 if (motionEvent.action == MotionEvent.ACTION_DOWN) {
-                    etPwd.inputType = (InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD)
+                    binding.etPwd.inputType = (InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD)
                 } else if (motionEvent.action == MotionEvent.ACTION_UP) {
-                    etPwd.inputType =
+                    binding.etPwd.inputType =
                         InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
                 }
-                etPwd.setSelection(etPwd.text.toString().length)
+                binding.etPwd.setSelection(binding.etPwd.text.toString().length)
                 true
             }
             //登录按钮功能
-            val llPhoneLogin = it.findViewById<FrameLayout>(R.id.ll_phone_login)
-            val flPwd = it.findViewById<FrameLayout>(R.id.fl_pwd)
-            btLogin.setOnClickListener {
-                val shake = BaseApplication.anims.shakeAnimation()
-                val phone = etPhone.text.toString().trim()
+            binding.btLogin.setOnClickListener {
+                val shake = BaseApplication.utilsHolder.anims.shakeAnimation()
+                val phone = binding.etPhone.text.toString().trim()
                 if (phone.length != 11) {
-                    llPhoneLogin.startAnimation(shake)
+                    binding.llPhoneLogin.startAnimation(shake)
                     Toast.makeText(context, "请输入正确的手机号", Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
-                phoneTemp = etPhone.text.toString()
-                if (isPassword && etPwd.text.toString().isBlank()) {
-                    flPwd.startAnimation(shake)
+                phoneTemp =binding. etPhone.text.toString()
+                if (isPassword && binding.etPwd.text.toString().isBlank()) {
+                    binding.flPwd.startAnimation(shake)
                     Toast.makeText(context, "请输入密码", Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
                 if (!agree) {
-                    llAgreementLogin.startAnimation(shake)
+                    binding.llAgreementLogin.startAnimation(shake)
                     Toast.makeText(context, "请同意我们的政策", Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
 
                 if (isPassword) {
-                    val pwd = etPwd.text.toString()
+                    val pwd = binding.etPwd.text.toString()
                     mPresenter?.loginByPd(phone, pwd)
                 } else {
                     verifyCodeFragment = VerifyCodeFragment.getInstance(this, phoneTemp)
@@ -179,8 +171,8 @@ class PasswordFragment : BaseFragment<LoginPresenter>(), LoginInterface.View {
     }
 
     override fun loginSuccess() {
-        BaseApplication.sp.login = true
-        BaseApplication.sp.phone = phoneTemp
+        BaseApplication.utilsHolder.sp.login = true
+        BaseApplication.utilsHolder.sp.phone = phoneTemp
         activity?.finish()
     }
 
@@ -190,5 +182,15 @@ class PasswordFragment : BaseFragment<LoginPresenter>(), LoginInterface.View {
 
     override fun loginByPdFailed(mes: String) {
         Toast.makeText(context, mes, Toast.LENGTH_SHORT).show()
+    }
+
+    private var _binding: FragmentPasswordBinding? = null
+    private val binding get() = _binding!!
+    override fun viewBinding(inflater: LayoutInflater, container: ViewGroup?,): View? {
+        _binding = FragmentPasswordBinding.inflate(inflater, container,false)
+        return _binding?.root
+    }
+    override fun unViewBinding() {
+        _binding = null
     }
 }

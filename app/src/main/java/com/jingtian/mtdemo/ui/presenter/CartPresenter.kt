@@ -1,6 +1,7 @@
 package com.jingtian.mtdemo.ui.presenter
 
 import android.util.Log
+import com.jingtian.mtdemo.BuildConfig
 import com.jingtian.mtdemo.base.presenter.BasePresenter
 import com.jingtian.mtdemo.bean.CartBean
 import com.jingtian.mtdemo.bean.SortBean
@@ -13,52 +14,52 @@ class CartPresenter : BasePresenter<CartInterface.View>(), CartInterface.Present
     //    private val data = arrayListOf(
 //        CartBean(
 //            R.mipmap.commodities1,
-//            BaseApplication.utils.getPrice(),
+//            BaseApplication.utilsHolder.utils.getPrice(),
 //            false
 //        ),
 //        CartBean(
 //            R.mipmap.commodities2,
-//            BaseApplication.utils.getPrice(),
+//            BaseApplication.utilsHolder.utils.getPrice(),
 //            false
 //        ),
 //        CartBean(
 //            R.mipmap.commodities3,
-//            BaseApplication.utils.getPrice(),
+//            BaseApplication.utilsHolder.utils.getPrice(),
 //            false
 //        ),
 //        CartBean(
 //            R.mipmap.commodities4,
-//            BaseApplication.utils.getPrice(),
+//            BaseApplication.utilsHolder.utils.getPrice(),
 //            false
 //        ),
 //        CartBean(
 //            R.mipmap.commodities5,
-//            BaseApplication.utils.getPrice(),
+//            BaseApplication.utilsHolder.utils.getPrice(),
 //            false
 //        ),
 //        CartBean(
 //            R.mipmap.commodities6,
-//            BaseApplication.utils.getPrice(),
+//            BaseApplication.utilsHolder.utils.getPrice(),
 //            false
 //        ),
 //        CartBean(
 //            R.mipmap.commodities7,
-//            BaseApplication.utils.getPrice(),
+//            BaseApplication.utilsHolder.utils.getPrice(),
 //            false
 //        ),
 //        CartBean(
 //            R.mipmap.commodities8,
-//            BaseApplication.utils.getPrice(),
+//            BaseApplication.utilsHolder.utils.getPrice(),
 //            false
 //        ),
 //        CartBean(
 //            R.mipmap.commodities9,
-//            BaseApplication.utils.getPrice(),
+//            BaseApplication.utilsHolder.utils.getPrice(),
 //            false
 //        ),
 //        CartBean(
 //            R.mipmap.commodities10,
-//            BaseApplication.utils.getPrice(),
+//            BaseApplication.utilsHolder.utils.getPrice(),
 //            false
 //        )
 //    )
@@ -66,7 +67,9 @@ class CartPresenter : BasePresenter<CartInterface.View>(), CartInterface.Present
         private val cartBuffer = ConcurrentLinkedDeque<CartBean>()
         val data = arrayListOf<CartBean>()
         fun add2Cart(sortBean: SortBean): Boolean {
-            Log.d("add:", "$sortBean")
+            if (BuildConfig.DEBUG) {
+                Log.d("add:", "$sortBean")
+            }
             var f = cartBuffer.find {
                 it.pic == sortBean.pic
             }

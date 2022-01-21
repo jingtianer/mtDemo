@@ -10,23 +10,23 @@ class SortPresenter : BasePresenter<SortInterface.View>(), SortInterface.Present
     override fun requestRvData(i: Int, j: Long) {
         mView?.provideRvData(
             i, j, arrayListOf(
-                SortBean(R.mipmap.commodities1, BaseApplication.utils.getPrice()),
-                SortBean(R.mipmap.commodities2, BaseApplication.utils.getPrice()),
-                SortBean(R.mipmap.commodities3, BaseApplication.utils.getPrice()),
-                SortBean(R.mipmap.commodities4, BaseApplication.utils.getPrice()),
-                SortBean(R.mipmap.commodities5, BaseApplication.utils.getPrice()),
-                SortBean(R.mipmap.commodities6, BaseApplication.utils.getPrice()),
-                SortBean(R.mipmap.commodities7, BaseApplication.utils.getPrice()),
-                SortBean(R.mipmap.commodities8, BaseApplication.utils.getPrice()),
-                SortBean(R.mipmap.commodities9, BaseApplication.utils.getPrice()),
-                SortBean(R.mipmap.commodities10, BaseApplication.utils.getPrice()),
-                SortBean(R.mipmap.commodities11, BaseApplication.utils.getPrice()),
-                SortBean(R.mipmap.commodities12, BaseApplication.utils.getPrice()),
-                SortBean(R.mipmap.commodities13, BaseApplication.utils.getPrice()),
-                SortBean(R.mipmap.commodities14, BaseApplication.utils.getPrice()),
-                SortBean(R.mipmap.commodities15, BaseApplication.utils.getPrice()),
-                SortBean(R.mipmap.commodities16, BaseApplication.utils.getPrice()),
-                SortBean(R.mipmap.commodities17, BaseApplication.utils.getPrice())
+                SortBean(R.mipmap.commodities1, BaseApplication.utilsHolder.utils.getPrice()),
+                SortBean(R.mipmap.commodities2, BaseApplication.utilsHolder.utils.getPrice()),
+                SortBean(R.mipmap.commodities3, BaseApplication.utilsHolder.utils.getPrice()),
+                SortBean(R.mipmap.commodities4, BaseApplication.utilsHolder.utils.getPrice()),
+                SortBean(R.mipmap.commodities5, BaseApplication.utilsHolder.utils.getPrice()),
+                SortBean(R.mipmap.commodities6, BaseApplication.utilsHolder.utils.getPrice()),
+                SortBean(R.mipmap.commodities7, BaseApplication.utilsHolder.utils.getPrice()),
+                SortBean(R.mipmap.commodities8, BaseApplication.utilsHolder.utils.getPrice()),
+                SortBean(R.mipmap.commodities9, BaseApplication.utilsHolder.utils.getPrice()),
+                SortBean(R.mipmap.commodities10, BaseApplication.utilsHolder.utils.getPrice()),
+                SortBean(R.mipmap.commodities11, BaseApplication.utilsHolder.utils.getPrice()),
+                SortBean(R.mipmap.commodities12, BaseApplication.utilsHolder.utils.getPrice()),
+                SortBean(R.mipmap.commodities13, BaseApplication.utilsHolder.utils.getPrice()),
+                SortBean(R.mipmap.commodities14, BaseApplication.utilsHolder.utils.getPrice()),
+                SortBean(R.mipmap.commodities15, BaseApplication.utilsHolder.utils.getPrice()),
+                SortBean(R.mipmap.commodities16, BaseApplication.utilsHolder.utils.getPrice()),
+                SortBean(R.mipmap.commodities17, BaseApplication.utilsHolder.utils.getPrice())
             )
         )
     }

@@ -6,13 +6,18 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.KeyEvent
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import com.jingtian.mtdemo.BuildConfig
 import com.jingtian.mtdemo.R
 import com.jingtian.mtdemo.base.BaseApplication
 import com.jingtian.mtdemo.base.view.BaseFragment
+import com.jingtian.mtdemo.databinding.FragmentPasswordBinding
+import com.jingtian.mtdemo.databinding.FragmentVerifycodeBinding
 import com.jingtian.mtdemo.ui.interfaces.LoginInterface
 import com.jingtian.mtdemo.ui.presenter.LoginPresenter
 import java.util.*
@@ -75,12 +80,14 @@ class VerifyCodeFragment(private val passwordFragment: PasswordFragment) :
             if (text.isNotEmpty()) {
                 cur += text
                 cur = cur.substring(0, min(4, cur.length))
-                Log.d("watcher", cur)
+                if (BuildConfig.DEBUG) {
+                    Log.d("watcher", cur)
+                }
                 update()
                 editText.setText("")
             }
             if (cur.length == 4) {
-                mPresenter?.loginByVc(BaseApplication.sp.phone, cur)
+                mPresenter?.loginByVc(BaseApplication.utilsHolder.sp.phone, cur)
             }
         }
 
@@ -114,31 +121,24 @@ class VerifyCodeFragment(private val passwordFragment: PasswordFragment) :
 
         super.onViewCreated(view, savedInstanceState)
         view.let {
-            val tvCurPhone = it.findViewById<TextView>(R.id.tv_curphone)
-            val etCode1 = it.findViewById<TextView>(R.id.et_code1)
-            val etCode2 = it.findViewById<TextView>(R.id.et_code2)
-            val etCode3 = it.findViewById<TextView>(R.id.et_code3)
-            val etCode4 = it.findViewById<TextView>(R.id.et_code4)
-            val tvChangePhone = it.findViewById<TextView>(R.id.tv_change_phone)
-            val tvSendCode = it.findViewById<TextView>(R.id.tv_send_code)
-            val etRealText = it.findViewById<EditText>(R.id.et_real_text)
-            startCount(tvSendCode)
-            codes.add(etCode1)
-            codes.add(etCode2)
-            codes.add(etCode3)
-            codes.add(etCode4)
-            etRealText.addTextChangedListener(VerifyCodeWatcher(etRealText, codes))
-            etRealText.setOnKeyListener(KeyListener(codes))
+            startCount(binding.tvSendCode)
+            codes.add(binding.etCode1)
+            codes.add(binding.etCode2)
+            codes.add(binding.etCode3)
+            codes.add(binding.etCode4)
+            binding.etRealText.addTextChangedListener(VerifyCodeWatcher(binding.etRealText, codes))
+            binding.etRealText.setOnKeyListener(KeyListener(codes))
 
-            tvCurPhone.text = tempPhone
-            tvChangePhone.setOnClickListener {
+            binding.tvCurphone.text = tempPhone
+            binding.tvChangePhone.setOnClickListener {
                 activity?.supportFragmentManager?.beginTransaction()
                     ?.replace(R.id.login_frame, passwordFragment)?.commit()
             }
-            tvSendCode.setOnClickListener {
+
+            binding.tvSendCode.setOnClickListener {
                 if (count == 0) {
                     Toast.makeText(context, "验证码已发送", Toast.LENGTH_SHORT).show()
-                    startCount(tvSendCode)
+                    startCount(binding.tvSendCode)
                 } else {
                     Toast.makeText(context, "请稍后再试", Toast.LENGTH_SHORT).show()
                 }
@@ -161,8 +161,8 @@ class VerifyCodeFragment(private val passwordFragment: PasswordFragment) :
     }
 
     override fun loginSuccess() {
-        BaseApplication.sp.login = true
-        BaseApplication.sp.phone = tempPhone
+        BaseApplication.utilsHolder.sp.login = true
+        BaseApplication.utilsHolder.sp.phone = tempPhone
         activity?.finish()
     }
 
@@ -172,5 +172,15 @@ class VerifyCodeFragment(private val passwordFragment: PasswordFragment) :
 
     override fun loginByPdFailed(mes: String) {
         Toast.makeText(activity, mes, Toast.LENGTH_SHORT).show()
+    }
+
+    private var _binding: FragmentVerifycodeBinding? = null
+    private val binding get() = _binding!!
+    override fun viewBinding(inflater: LayoutInflater, container: ViewGroup?,): View? {
+        _binding = FragmentVerifycodeBinding.inflate(inflater, container,false)
+        return _binding?.root
+    }
+    override fun unViewBinding() {
+        _binding = null
     }
 }

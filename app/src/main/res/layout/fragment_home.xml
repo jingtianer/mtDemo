@@ -7,36 +7,33 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/home_search_bar"
+        android:id="@+id/home_search_bar_root"
+        android:background="@drawable/home_bg"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="23dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/searchbar"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp">
+        android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/tv_search_bar"
+        <LinearLayout
+            android:id="@+id/home_search_bar"
+            android:transitionName="transition_searchbar"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:text="@string/search"
-            android:textSize="20sp" />
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="23dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/searchbar"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
 
-        <EditText
-            android:id="@+id/et_search_bar"
-            android:layout_width="match_parent"
-            android:layout_height="42dp"
-            android:layout_gravity="center"
-            android:layout_marginStart="5dp"
-            android:autofillHints="@null"
-            android:background="@null"
-            android:hint="@string/home_search_hint"
-            android:inputType="text" />
+            <TextView
+                android:id="@+id/tv_search_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="42dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="@string/search"
+                android:textSize="20sp" />
+        </LinearLayout>
     </LinearLayout>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -57,6 +54,7 @@
                 app:layout_scrollFlags="scroll|snap|enterAlwaysCollapsed|exitUntilCollapsed">
 
                 <LinearLayout
+
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"

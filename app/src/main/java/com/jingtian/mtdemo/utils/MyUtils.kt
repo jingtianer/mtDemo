@@ -5,6 +5,7 @@ import android.graphics.Typeface
 import android.os.Build
 import android.util.Log
 import android.widget.TextView
+import com.jingtian.mtdemo.BuildConfig
 import kotlin.math.abs
 import kotlin.random.Random
 
@@ -32,7 +33,9 @@ class MyUtils(val context: Context) {
 
     fun setFont(view: TextView) {
         view.typeface = getTypeFace("iconfont.ttf")
-        Log.d("typeface", "${view.typeface == null}")
+        if (BuildConfig.DEBUG) {
+            Log.d("typeface", "${view.typeface == null}")
+        }
     }
 
     fun getScreenHeight(): Int =

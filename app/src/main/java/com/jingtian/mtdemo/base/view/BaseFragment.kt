@@ -17,9 +17,9 @@ abstract class BaseFragment<T : BaseInterface.Presenter> : BaseInterface.View, F
     }
 
     fun login() {
-        if (!BaseApplication.sp.login) {
+        if (!BaseApplication.utilsHolder.sp.login) {
             val intent = Intent(this.context, LoginActivity::class.java)
-            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             context?.startActivity(intent)
         }
     }
@@ -37,6 +37,8 @@ abstract class BaseFragment<T : BaseInterface.Presenter> : BaseInterface.View, F
 
     abstract fun getPresenter(): T
     abstract fun getLayout(): Int
+    abstract fun viewBinding(inflater: LayoutInflater, container: ViewGroup?,): View?
+    abstract fun unViewBinding()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mPresenter = getPresenter()
@@ -48,11 +50,12 @@ abstract class BaseFragment<T : BaseInterface.Presenter> : BaseInterface.View, F
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(getLayout(), container, false)
+        return viewBinding(inflater, container)
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        unViewBinding()
         mPresenter?.unbind()
         mPresenter = null
     }

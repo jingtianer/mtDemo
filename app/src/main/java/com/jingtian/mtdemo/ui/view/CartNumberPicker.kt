@@ -56,8 +56,8 @@ class CartNumberPicker(context: Context, attrs: AttributeSet?) : LinearLayout(co
         //回收TypedArray,用于后续调用时可复用之。当调用该方法后，不能再操作该变量。
         //该类没有公共的构造函数，只提供静态方法获取实例，是一个典型的单例模式。这个 array 是从一个 array pool的池中获取的。
 
-        BaseApplication.utils.setFont(leftButton)
-        BaseApplication.utils.setFont(rightButton)
+        BaseApplication.utilsHolder.utils.setFont(leftButton)
+        BaseApplication.utilsHolder.utils.setFont(rightButton)
         numberTextView.text = "$number"
         leftButton.text = context.getString(R.string.minus)
         rightButton.text = context.getString(R.string.add)
@@ -81,7 +81,7 @@ class CartNumberPicker(context: Context, attrs: AttributeSet?) : LinearLayout(co
 
     private fun isInvalidNumber(n: Int): Boolean {
         if (isNonNegative && n < 0) {
-            this.startAnimation(BaseApplication.anims.shakeAnimation())
+            this.startAnimation(BaseApplication.utilsHolder.anims.shakeAnimation())
         }
         return isNonNegative && n < 0
     }

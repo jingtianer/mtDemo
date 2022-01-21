@@ -31,12 +31,12 @@ class MineAdapter1(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.apply {
-            BaseApplication.utils.setFont(tvItemMine1)
+            BaseApplication.utilsHolder.utils.setFont(tvItemMine1)
             tvItemMine1.text = SpannableString(data[position].data1).apply {
                 setSpan(AbsoluteSizeSpan(32, true), 0, 1, 0)
                 setSpan(
                     ForegroundColorSpan(
-                        BaseApplication.utils.getColor(
+                        BaseApplication.utilsHolder.utils.getColor(
                             R.color.orange_secondary
                         )
                     ), 0, 1, 0
