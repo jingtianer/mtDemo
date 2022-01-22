@@ -51,7 +51,7 @@ class MainActivity : BaseActivity<MainInterface.Presenter>(), MainInterface.View
     private var pagerCallback = object : ViewPager2.OnPageChangeCallback() {
         override fun onPageSelected(position: Int) {
             super.onPageSelected(position)
-            (binding.rcBtmNavi?.adapter as NaviAdapter).apply {
+            (binding.rcBtmNavi.adapter as NaviAdapter).apply {
                 changeSelectedItem(position)
                 if (getLayoutId(position) == R.layout.fragment_mine) {
                     login()

@@ -65,7 +65,7 @@ class SortFragment : BaseFragment<SortPresenter>(), SortInterface.View {
                 mPresenter?.requestRvData(i1, j1)
             }
         }
-        binding.nsvSort?.let {
+        binding.nsvSort.let {
             if (BuildConfig.DEBUG) {
                 Log.d("sort nsvSort", "not null")
             }

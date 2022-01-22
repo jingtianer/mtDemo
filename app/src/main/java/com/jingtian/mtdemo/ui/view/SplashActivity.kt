@@ -4,6 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.os.Message
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -68,23 +71,10 @@ class SplashActivity : BaseActivity<BaseInterface.Presenter>() {
         splashDelay = d
     }
 
-    class SplashTimerTask(private val activity: SplashActivity, private var splashDelay: Int) :
+    class SplashTimerTask(val handler: Handler) :
         TimerTask() {
         override fun run() {
-            activity.runOnUiThread {
-                val tvDelay = activity.findViewById<TextView>(R.id.sp_delay)
-                if (BuildConfig.DEBUG) {
-                    Log.d("delay", "${splashDelay}s")
-                }
-                tvDelay.text = activity.resources.getString(R.string.tvDelay, splashDelay)
-                if (splashDelay == 0) {
-                    activity.startMainActivity()
-                    this.cancel()
-                }
-                splashDelay--
-                activity.setSplashDelay(splashDelay)
-            }
-
+            handler.sendEmptyMessage(FROM_SPLASH_TIMING)
         }
     }
 
@@ -107,23 +97,40 @@ class SplashActivity : BaseActivity<BaseInterface.Presenter>() {
         data = d
     }
 
+    companion object {
+        const val FROM_SPLASH = 0
+        const val FROM_SPLASH_TIMING = 1
+    }
+    var accelerate = 0
+    private val splashHandler = Handler(Looper.myLooper()!!) {
+        if (it.what == FROM_SPLASH) {
+            if (data >= 10800) {
+                splashTimer?.cancel()
+            } else {
+                binding.clSplash.background.level = data
+                data += 200
+                setData(data)
+            }
+        } else if (it.what == FROM_SPLASH_TIMING) {
+            val tvDelay = binding.spDelay
+            if (BuildConfig.DEBUG) {
+                Log.d("delay", "${splashDelay}s")
+            }
+            tvDelay.text = resources.getString(R.string.tvDelay, splashDelay)
+            if (splashDelay == 0) {
+                startMainActivity()
+                timer?.cancel()
+            }
+            splashDelay--
+            setSplashDelay(splashDelay)
+        }
+        return@Handler true
+    }
     class SplashTask(
-        private val activity: SplashActivity,
-        private val timer: Timer,
-        private var data: Int
+        private val splashHandler:Handler
     ) : TimerTask() {
         override fun run() {
-            val clSplash = activity.findViewById<ConstraintLayout>(R.id.cl_splash)
-            val clipDrawable = clSplash.background
-            if (data >= 10800) {
-                timer.cancel()
-            } else {
-                activity.runOnUiThread {
-                    clipDrawable.level = data
-                    data += 200
-                    activity.setData(data)
-                }
-            }
+            splashHandler.sendEmptyMessage(FROM_SPLASH)
 
         }
     }
@@ -141,7 +148,7 @@ class SplashActivity : BaseActivity<BaseInterface.Presenter>() {
 //            true
 //        }
         //handler不会用
-        splashTimer?.schedule(SplashTask(this, splashTimer!!, data), 0, splashPeriod)
+        splashTimer?.schedule(SplashTask(splashHandler), 0, splashPeriod)
 
     }
 
@@ -165,7 +172,7 @@ class SplashActivity : BaseActivity<BaseInterface.Presenter>() {
         super.onResume()
         timer = Timer()
         splashTimer = Timer()
-        timer?.scheduleAtFixedRate(SplashTimerTask(this, splashDelay), 0, 1000)
+        timer?.scheduleAtFixedRate(SplashTimerTask(splashHandler), 0, 1000)
         startSplash()
     }
 
