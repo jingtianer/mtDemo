@@ -11,7 +11,7 @@ abstract class CommonRvAdapter<E:Any, V: ViewBinding>: RecyclerView.Adapter<Comm
             field = value
             notifyItemRangeChanged(0, field.size)
         }
-    fun insertItem(item:E) {
+    open fun insertItem(item:E) {
         data.add(item)
         notifyItemInserted(data.size - 1)
     }

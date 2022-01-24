@@ -1,6 +1,7 @@
 package com.jingtian.mtdemo.ui.view
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ApplicationInfo
@@ -9,12 +10,11 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.*
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jingtian.mtdemo.BuildConfig
 import com.jingtian.mtdemo.R
@@ -23,56 +23,14 @@ import com.jingtian.mtdemo.base.interfaces.BaseInterface
 import com.jingtian.mtdemo.base.presenter.BasePresenter
 import com.jingtian.mtdemo.base.view.BaseActivity
 import com.jingtian.mtdemo.databinding.ActivitySearchBinding
-import com.jingtian.mtdemo.databinding.ItemAppsBinding
-import com.jingtian.mtdemo.ui.adapters.CommonRvAdapter
+import com.jingtian.mtdemo.ui.adapters.AppsAdapter
 import kotlin.concurrent.thread
 
 class SearchActivity : BaseActivity<BaseInterface.Presenter>(), BaseInterface.View {
-    class AppsAdapter() : CommonRvAdapter<AppBean, ItemAppsBinding>() {
-        override fun onCreateViewHolder(
-            parent: ViewGroup,
-            viewType: Int
-        ): CommonRvHolder<ItemAppsBinding> {
-            return CommonRvHolder(
-                ItemAppsBinding.inflate(
-                    LayoutInflater.from(parent.context),
-                    parent,
-                    false
-                )
-            )
-        }
-
-        override fun onBindViewHolder(holder: CommonRvHolder<ItemAppsBinding>, position: Int) {
-            holder.binding.apply {
-                data[position].let { item ->
-                    tvAppName.text = item.applicationInfo.name
-                    ivAppsIcon.background = item.icon
-                    tvAppPackageName.text = item.applicationInfo.packageName
-                    when (item.type) {
-                        AppBean.Type.SYSTEM_APP -> {
-                            tvUninstallable.text = "不可卸載"
-                            tvUninstallBt.visibility = View.GONE
-                        }
-                        AppBean.Type.USER_APP -> {
-                            tvUninstallable.visibility = View.GONE
-                            BaseApplication.utilsHolder.utils.setFont(tvUninstallBt)
-                            tvUninstallable.setTextColor(
-                                BaseApplication.utilsHolder.utils.getColor(
-                                    R.color.orange
-                                )
-                            )
-                        }
-                    }
-                    tvUninstallBt.setOnClickListener {
-                        val intent = Intent(Intent.ACTION_DELETE)
-                        intent.data = Uri.parse("package:" + item.applicationInfo.packageName)
-                        it.context.startActivity(intent)
-                    }
-                }
-
-            }
-        }
+    interface UninstallButton {
+        fun clickForResult(packageName: String)
     }
+
 
     companion object {
         const val TAG = "search_activity"
@@ -81,6 +39,17 @@ class SearchActivity : BaseActivity<BaseInterface.Presenter>(), BaseInterface.Vi
     override fun getPresenter(): BaseInterface.Presenter {
         return BasePresenter<SearchActivity>()
     }
+
+    private val mStartActivity =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            val adapter =
+                binding.rvSearchResult.adapter as AppsAdapter
+            if (it != null && it.resultCode == Activity.RESULT_OK) {
+                adapter.deletionResult(true)
+            } else {
+                adapter.deletionResult(false)
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,11 +60,20 @@ class SearchActivity : BaseActivity<BaseInterface.Presenter>(), BaseInterface.Vi
         BaseApplication.utilsHolder.utils.setFont(binding.tvSearchSearchBar)
         imeShowUp()
         binding.rvSearchResult.layoutManager = LinearLayoutManager(this)
-        binding.rvSearchResult.adapter = AppsAdapter()
+        binding.rvSearchResult.adapter = AppsAdapter(object : UninstallButton {
+            override fun clickForResult(packageName: String) {
+                val intent = Intent(Intent.ACTION_DELETE)
+                intent.data = Uri.parse("package:$packageName")
+                intent.putExtra(Intent.EXTRA_RETURN_RESULT, true)
+                mStartActivity.launch(intent)
+            }
+
+        })
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             binding.nestedScrollView3.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
-                val isBottom = scrollY == binding.rvSearchResult.measuredHeight - binding.nestedScrollView3.measuredHeight
-    //            加入前用戶已經滑動到底部
+                val isBottom =
+                    scrollY == binding.rvSearchResult.measuredHeight - binding.nestedScrollView3.measuredHeight
+                //            加入前用戶已經滑動到底部
                 if (isBottom && !loadCompleted) {
                     Toast.makeText(v.context, "已經在用力加載了啦", Toast.LENGTH_SHORT).show()
                 }
@@ -109,10 +87,16 @@ class SearchActivity : BaseActivity<BaseInterface.Presenter>(), BaseInterface.Vi
         readApps()
     }
 
-    data class AppBean(val applicationInfo: ApplicationInfo, val icon: Drawable, val type: Type) {
+    data class AppBean(
+        val label: String,
+        val applicationInfo: ApplicationInfo,
+        val icon: Drawable,
+        val type: Type
+    ) {
         enum class Type {
             SYSTEM_APP,
-            USER_APP
+            USER_APP,
+            OTHER_APP
         }
     }
 
@@ -173,43 +157,48 @@ class SearchActivity : BaseActivity<BaseInterface.Presenter>(), BaseInterface.Vi
         true
     }
     var loadCompleted = false
+
     @SuppressLint("QueryPermissionsNeeded")
     private fun readApps() {
-        val pm = packageManager
         thread {
-            val packages = pm.getInstalledApplications(0)
+            val packages = packageManager.getInstalledApplications(0)
+            val userApps = mutableListOf<AppBean>()
+            val systemApps = mutableListOf<AppBean>()
             if (BuildConfig.DEBUG) {
                 Log.d(TAG, "${packages.size}")
             }
-            var type = AppBean.Type.SYSTEM_APP
+            var log = "other"
+            var type = AppBean.Type.OTHER_APP
             for (applicationInfo in packages) {
-                Thread.sleep(500)
+                Thread.sleep(300)
                 if ((applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0) {
-                    if (BuildConfig.DEBUG) {
-                        Log.d(TAG, "system:${applicationInfo.packageName}")
-                    }
-
-                } else {
-                    if (BuildConfig.DEBUG) {
-                        Log.d(TAG, "user:${applicationInfo.packageName}")
-                    }
-                    type = AppBean.Type.USER_APP
-                }
-//                appQueue.add(
-//                    AppBean(
-//                        applicationInfo,
-//                        packageManager.getIcon(applicationInfo),
-//                        type
-//                    )
-//                )
-                handler.sendMessage(Message().apply {
-                        obj = AppBean(
+                    log = "system"
+                    type = AppBean.Type.SYSTEM_APP
+                    systemApps.add(
+                        AppBean(
+                            applicationInfo.loadLabel(packageManager).toString(),
                             applicationInfo,
                             packageManager.getIcon(applicationInfo),
                             type
                         )
-                    })
+                    )
 
+                } else if ((applicationInfo.flags and ApplicationInfo.FLAG_INSTALLED) != 0) {
+                    type = AppBean.Type.USER_APP
+                    log = "user"
+                }
+
+                if (BuildConfig.DEBUG) {
+                    Log.d(TAG, "$log:${applicationInfo.packageName}")
+                }
+                handler.sendMessage(Message().apply {
+                    obj = AppBean(
+                        applicationInfo.loadLabel(packageManager).toString(),
+                        applicationInfo,
+                        packageManager.getIcon(applicationInfo),
+                        type
+                    )
+                })
             }
             loadCompleted = true
         }
@@ -236,10 +225,6 @@ class SearchActivity : BaseActivity<BaseInterface.Presenter>(), BaseInterface.Vi
         }, 300)
     }
 
-    override fun onResume() {
-        super.onResume()
-
-    }
 
     override fun getLayout(): Int {
         return R.layout.activity_search
